@@ -1,0 +1,42 @@
+C:\workplace\Sinestify\Sinestify\bin\Debug\net9.0\Sinestify.exe
+C:\workplace\Sinestify\Sinestify\bin\Debug\net9.0\Sinestify.deps.json
+C:\workplace\Sinestify\Sinestify\bin\Debug\net9.0\Sinestify.runtimeconfig.json
+C:\workplace\Sinestify\Sinestify\bin\Debug\net9.0\Sinestify.dll
+C:\workplace\Sinestify\Sinestify\bin\Debug\net9.0\Sinestify.pdb
+C:\workplace\Sinestify\Sinestify\obj\Debug\net9.0\Sinestify.GeneratedMSBuildEditorConfig.editorconfig
+C:\workplace\Sinestify\Sinestify\obj\Debug\net9.0\Sinestify.AssemblyInfoInputs.cache
+C:\workplace\Sinestify\Sinestify\obj\Debug\net9.0\Sinestify.AssemblyInfo.cs
+C:\workplace\Sinestify\Sinestify\obj\Debug\net9.0\Sinestify.csproj.CoreCompileInputs.cache
+C:\workplace\Sinestify\Sinestify\obj\Debug\net9.0\Sinestify.dll
+C:\workplace\Sinestify\Sinestify\obj\Debug\net9.0\refint\Sinestify.dll
+C:\workplace\Sinestify\Sinestify\obj\Debug\net9.0\Sinestify.pdb
+C:\workplace\Sinestify\Sinestify\obj\Debug\net9.0\Sinestify.genruntimeconfig.cache
+C:\workplace\Sinestify\Sinestify\obj\Debug\net9.0\ref\Sinestify.dll
+C:\Users\Suporte\Downloads\Sinestify 1\Sinestify\obj\Debug\net9.0\Sinestify.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Suporte\Downloads\Sinestify 1\Sinestify\obj\Debug\net9.0\Sinestify.AssemblyInfoInputs.cache
+C:\Users\Suporte\Downloads\Sinestify 1\Sinestify\obj\Debug\net9.0\Sinestify.AssemblyInfo.cs
+C:\Users\Suporte\Downloads\Sinestify 1\Sinestify\obj\Debug\net9.0\Sinestify.csproj.CoreCompileInputs.cache
+C:\Users\Suporte\Downloads\Sinestify 1\Sinestify\obj\Debug\net9.0\Sinestify.dll
+C:\Users\Suporte\Downloads\Sinestify 1\Sinestify\obj\Debug\net9.0\refint\Sinestify.dll
+C:\Users\Suporte\Downloads\Sinestify 1\Sinestify\obj\Debug\net9.0\Sinestify.pdb
+C:\Users\Suporte\Downloads\Sinestify 1\Sinestify\bin\Debug\net9.0\Sinestify.exe
+C:\Users\Suporte\Downloads\Sinestify 1\Sinestify\bin\Debug\net9.0\Sinestify.deps.json
+C:\Users\Suporte\Downloads\Sinestify 1\Sinestify\bin\Debug\net9.0\Sinestify.runtimeconfig.json
+C:\Users\Suporte\Downloads\Sinestify 1\Sinestify\bin\Debug\net9.0\Sinestify.dll
+C:\Users\Suporte\Downloads\Sinestify 1\Sinestify\bin\Debug\net9.0\Sinestify.pdb
+C:\Users\Suporte\Downloads\Sinestify 1\Sinestify\obj\Debug\net9.0\Sinestify.genruntimeconfig.cache
+C:\Users\Suporte\Downloads\Sinestify 1\Sinestify\obj\Debug\net9.0\ref\Sinestify.dll
+C:\Users\Suporte\Documents\Sinestify\bin\Debug\net9.0\Sinestify.exe
+C:\Users\Suporte\Documents\Sinestify\bin\Debug\net9.0\Sinestify.deps.json
+C:\Users\Suporte\Documents\Sinestify\bin\Debug\net9.0\Sinestify.runtimeconfig.json
+C:\Users\Suporte\Documents\Sinestify\bin\Debug\net9.0\Sinestify.dll
+C:\Users\Suporte\Documents\Sinestify\bin\Debug\net9.0\Sinestify.pdb
+C:\Users\Suporte\Documents\Sinestify\obj\Debug\net9.0\Sinestify.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Suporte\Documents\Sinestify\obj\Debug\net9.0\Sinestify.AssemblyInfoInputs.cache
+C:\Users\Suporte\Documents\Sinestify\obj\Debug\net9.0\Sinestify.AssemblyInfo.cs
+C:\Users\Suporte\Documents\Sinestify\obj\Debug\net9.0\Sinestify.csproj.CoreCompileInputs.cache
+C:\Users\Suporte\Documents\Sinestify\obj\Debug\net9.0\Sinestify.dll
+C:\Users\Suporte\Documents\Sinestify\obj\Debug\net9.0\refint\Sinestify.dll
+C:\Users\Suporte\Documents\Sinestify\obj\Debug\net9.0\Sinestify.pdb
+C:\Users\Suporte\Documents\Sinestify\obj\Debug\net9.0\Sinestify.genruntimeconfig.cache
+C:\Users\Suporte\Documents\Sinestify\obj\Debug\net9.0\ref\Sinestify.dll
