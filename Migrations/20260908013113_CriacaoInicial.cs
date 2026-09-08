@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Sinestify.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class CriacaoInicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -57,15 +57,15 @@ namespace Sinestify.Migrations
                     Cantor = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     GeneroId = table.Column<int>(type: "int", nullable: false),
-                    SentimentoId = table.Column<int>(type: "int", nullable: false),
+                    EmocaoId = table.Column<int>(type: "int", nullable: false),
                     Velocidade = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Musicas", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Musicas_Emocoes_SentimentoId",
-                        column: x => x.SentimentoId,
+                        name: "FK_Musicas_Emocoes_EmocaoId",
+                        column: x => x.EmocaoId,
                         principalTable: "Emocoes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -116,40 +116,40 @@ namespace Sinestify.Migrations
 
             migrationBuilder.InsertData(
                 table: "Musicas",
-                columns: new[] { "Id", "Cantor", "GeneroId", "Nome", "SentimentoId", "Velocidade" },
+                columns: new[] { "Id", "Cantor", "EmocaoId", "GeneroId", "Nome", "Velocidade" },
                 values: new object[,]
                 {
-                    { 1, "Imagine Dragons", 2, "Believer", 3, 120 },
-                    { 2, "Imagine Dragons", 2, "Thunder", 3, 118 },
-                    { 3, "Ed Sheeran", 1, "Shape Of You", 1, 76 },
-                    { 4, "OneRepublic", 11, "Counting Stars", 5, 94 },
-                    { 5, "Ed Sheeran", 1, "Perfect", 1, 48 },
-                    { 6, "The Weeknd", 3, "Blinding Lights", 4, 65 },
-                    { 7, "Adele", 5, "Someone Like You", 2, 40 },
-                    { 8, "Linkin Park", 12, "Numb", 2, 90 },
-                    { 9, "Imagine Dragons", 2, "Radioactive", 4, 100 },
-                    { 10, "Coldplay", 11, "Viva La Vida", 1, 110 },
-                    { 11, "Bob Marley", 8, "Three Little Birds", 1, 76 },
-                    { 12, "Mark Ronson feat. Bruno Mars", 9, "Uptown Funk", 3, 115 },
-                    { 13, "John Denver", 10, "Take Me Home, Country Roads", 1, 82 },
-                    { 14, "Coldplay", 1, "Yellow", 10, 87 },
-                    { 15, "Coldplay", 11, "The Scientist", 8, 73 },
-                    { 16, "Journey", 4, "Don't Stop Believin'", 7, 119 },
-                    { 17, "Bryan Adams", 4, "Summer Of '69", 6, 138 },
-                    { 18, "Red Hot Chili Peppers", 12, "Can't Stop", 9, 91 },
-                    { 19, "Avicii", 7, "Wake Me Up", 7, 124 },
-                    { 20, "Guns N' Roses", 4, "Sweet Child O' Mine", 6, 125 }
+                    { 1, "Imagine Dragons", 3, 2, "Believer", 120 },
+                    { 2, "Imagine Dragons", 3, 2, "Thunder", 118 },
+                    { 3, "Ed Sheeran", 1, 1, "Shape Of You", 76 },
+                    { 4, "OneRepublic", 5, 11, "Counting Stars", 94 },
+                    { 5, "Ed Sheeran", 1, 1, "Perfect", 48 },
+                    { 6, "The Weeknd", 4, 3, "Blinding Lights", 65 },
+                    { 7, "Adele", 2, 5, "Someone Like You", 40 },
+                    { 8, "Linkin Park", 2, 12, "Numb", 90 },
+                    { 9, "Imagine Dragons", 4, 2, "Radioactive", 100 },
+                    { 10, "Coldplay", 1, 11, "Viva La Vida", 110 },
+                    { 11, "Bob Marley", 1, 8, "Three Little Birds", 76 },
+                    { 12, "Mark Ronson feat. Bruno Mars", 3, 9, "Uptown Funk", 115 },
+                    { 13, "John Denver", 1, 10, "Take Me Home, Country Roads", 82 },
+                    { 14, "Coldplay", 10, 1, "Yellow", 87 },
+                    { 15, "Coldplay", 8, 11, "The Scientist", 73 },
+                    { 16, "Journey", 7, 4, "Don't Stop Believin'", 119 },
+                    { 17, "Bryan Adams", 6, 4, "Summer Of '69", 138 },
+                    { 18, "Red Hot Chili Peppers", 9, 12, "Can't Stop", 91 },
+                    { 19, "Avicii", 7, 7, "Wake Me Up", 124 },
+                    { 20, "Guns N' Roses", 6, 4, "Sweet Child O' Mine", 125 }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Musicas_EmocaoId",
+                table: "Musicas",
+                column: "EmocaoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Musicas_GeneroId",
                 table: "Musicas",
                 column: "GeneroId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Musicas_SentimentoId",
-                table: "Musicas",
-                column: "SentimentoId");
         }
 
         /// <inheritdoc />

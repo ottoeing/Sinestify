@@ -1,14 +1,14 @@
 namespace Sinesify
 {
-    public class Emoção
+    public class Emocao
     {
         public int Id { get; set; }
         public string Sentimento { get; set; } = string.Empty;
-        public List<Music> Musicas { get; set; } = new();
+        public List<Musica> Musicas { get; set; } = new();
 
-        public Emoção() { }
+        public Emocao() { }
 
-        public Emoção(string sentimento)
+        public Emocao(string sentimento)
         {
             Sentimento = sentimento;
         }

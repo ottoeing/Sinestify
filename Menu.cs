@@ -6,13 +6,13 @@ namespace Sinesify
 {
     public class Menu
     {
-        private readonly List<Music> musicas;
-        private readonly Player player;
+        private readonly List<Musica> musicas;
+        private readonly Tocador tocador;
 
-        public Menu(MusicDAO dao)
+        public Menu(RepositorioMusicas repositorio)
         {
-            player = new Player();
-            musicas = dao.ListarMusicas();
+            tocador = new Tocador();
+            musicas = repositorio.ListarMusicas();
         }
 
         public void Iniciar()
@@ -57,8 +57,8 @@ namespace Sinesify
                 for (int i = 0; i < musicas.Count; i++)
                 {
                     string genero = musicas[i].Genero?.Nome ?? "Sem gênero";
-                    string sentimento = musicas[i].Sentimento?.Sentimento ?? "Sem sentimento";
-                    Console.WriteLine($"{i + 1} - {musicas[i].Nome} - {musicas[i].Cantor} [{genero}] ({sentimento}, {musicas[i].Velocidade} BPM)");
+                    string emocao = musicas[i].Emocao?.Sentimento ?? "Sem emoção";
+                    Console.WriteLine($"{i + 1} - {musicas[i].Nome} - {musicas[i].Cantor} [{genero}] ({emocao}, {musicas[i].Velocidade} BPM)");
                 }
                 Console.WriteLine("\n0 - Voltar");
                 Console.Write("\nEscolha: ");
@@ -68,7 +68,7 @@ namespace Sinesify
                         return;
                     if (escolha >= 1 && escolha <= musicas.Count)
                     {
-                        player.Executar(musicas[escolha - 1]);
+                        tocador.Tocar(musicas[escolha - 1]);
                     }
                 }
             }

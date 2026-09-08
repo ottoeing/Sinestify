@@ -3,18 +3,18 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Sinesify
 {
-    internal class Program
+    internal class Programa
     {
         static void Main(string[] args)
         {
-            var services = new ServiceCollection();
+            var servicos = new ServiceCollection();
 
-            services.AddDbContext<SinestifyContext>();
-            services.AddScoped<MusicDAO>();
-            services.AddScoped<Menu>();
+            servicos.AddDbContext<ContextoSinestify>();
+            servicos.AddScoped<RepositorioMusicas>();
+            servicos.AddScoped<Menu>();
 
-            using var serviceProvider = services.BuildServiceProvider();
-            Menu menu = serviceProvider.GetRequiredService<Menu>();
+            using var provedorServicos = servicos.BuildServiceProvider();
+            Menu menu = provedorServicos.GetRequiredService<Menu>();
             menu.Iniciar();
         }
     }

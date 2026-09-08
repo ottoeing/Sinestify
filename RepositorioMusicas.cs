@@ -2,20 +2,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sinesify;
 
-public class MusicDAO
+public class RepositorioMusicas
 {
-    private readonly SinestifyContext conexao;
+    private readonly ContextoSinestify conexao;
 
-    public MusicDAO(SinestifyContext conexao)
+    public RepositorioMusicas(ContextoSinestify conexao)
     {
         this.conexao = conexao;
     }
 
-    public List<Music> ListarMusicas()
+    public List<Musica> ListarMusicas()
     {
         return conexao.Musicas
             .Include(m => m.Genero)
-            .Include(m => m.Sentimento)
+            .Include(m => m.Emocao)
             .OrderBy(m => m.Id)
             .ToList();
     }

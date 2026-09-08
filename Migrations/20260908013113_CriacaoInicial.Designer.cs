@@ -10,9 +10,9 @@ using Sinesify;
 
 namespace Sinestify.Migrations
 {
-    [DbContext(typeof(SinestifyContext))]
-    [Migration("20260908011706_InitialCreate")]
-    partial class InitialCreate
+    [DbContext(typeof(ContextoSinestify))]
+    [Migration("20260908013113_CriacaoInicial")]
+    partial class CriacaoInicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace Sinestify.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("Sinesify.Emoção", b =>
+            modelBuilder.Entity("Sinesify.Emocao", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -172,7 +172,7 @@ namespace Sinestify.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Sinesify.Music", b =>
+            modelBuilder.Entity("Sinesify.Musica", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -184,6 +184,9 @@ namespace Sinestify.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("EmocaoId")
+                        .HasColumnType("int");
+
                     b.Property<int>("GeneroId")
                         .HasColumnType("int");
 
@@ -191,17 +194,14 @@ namespace Sinestify.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("SentimentoId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Velocidade")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GeneroId");
+                    b.HasIndex("EmocaoId");
 
-                    b.HasIndex("SentimentoId");
+                    b.HasIndex("GeneroId");
 
                     b.ToTable("Musicas");
 
@@ -210,204 +210,204 @@ namespace Sinestify.Migrations
                         {
                             Id = 1,
                             Cantor = "Imagine Dragons",
+                            EmocaoId = 3,
                             GeneroId = 2,
                             Nome = "Believer",
-                            SentimentoId = 3,
                             Velocidade = 120
                         },
                         new
                         {
                             Id = 2,
                             Cantor = "Imagine Dragons",
+                            EmocaoId = 3,
                             GeneroId = 2,
                             Nome = "Thunder",
-                            SentimentoId = 3,
                             Velocidade = 118
                         },
                         new
                         {
                             Id = 3,
                             Cantor = "Ed Sheeran",
+                            EmocaoId = 1,
                             GeneroId = 1,
                             Nome = "Shape Of You",
-                            SentimentoId = 1,
                             Velocidade = 76
                         },
                         new
                         {
                             Id = 4,
                             Cantor = "OneRepublic",
+                            EmocaoId = 5,
                             GeneroId = 11,
                             Nome = "Counting Stars",
-                            SentimentoId = 5,
                             Velocidade = 94
                         },
                         new
                         {
                             Id = 5,
                             Cantor = "Ed Sheeran",
+                            EmocaoId = 1,
                             GeneroId = 1,
                             Nome = "Perfect",
-                            SentimentoId = 1,
                             Velocidade = 48
                         },
                         new
                         {
                             Id = 6,
                             Cantor = "The Weeknd",
+                            EmocaoId = 4,
                             GeneroId = 3,
                             Nome = "Blinding Lights",
-                            SentimentoId = 4,
                             Velocidade = 65
                         },
                         new
                         {
                             Id = 7,
                             Cantor = "Adele",
+                            EmocaoId = 2,
                             GeneroId = 5,
                             Nome = "Someone Like You",
-                            SentimentoId = 2,
                             Velocidade = 40
                         },
                         new
                         {
                             Id = 8,
                             Cantor = "Linkin Park",
+                            EmocaoId = 2,
                             GeneroId = 12,
                             Nome = "Numb",
-                            SentimentoId = 2,
                             Velocidade = 90
                         },
                         new
                         {
                             Id = 9,
                             Cantor = "Imagine Dragons",
+                            EmocaoId = 4,
                             GeneroId = 2,
                             Nome = "Radioactive",
-                            SentimentoId = 4,
                             Velocidade = 100
                         },
                         new
                         {
                             Id = 10,
                             Cantor = "Coldplay",
+                            EmocaoId = 1,
                             GeneroId = 11,
                             Nome = "Viva La Vida",
-                            SentimentoId = 1,
                             Velocidade = 110
                         },
                         new
                         {
                             Id = 11,
                             Cantor = "Bob Marley",
+                            EmocaoId = 1,
                             GeneroId = 8,
                             Nome = "Three Little Birds",
-                            SentimentoId = 1,
                             Velocidade = 76
                         },
                         new
                         {
                             Id = 12,
                             Cantor = "Mark Ronson feat. Bruno Mars",
+                            EmocaoId = 3,
                             GeneroId = 9,
                             Nome = "Uptown Funk",
-                            SentimentoId = 3,
                             Velocidade = 115
                         },
                         new
                         {
                             Id = 13,
                             Cantor = "John Denver",
+                            EmocaoId = 1,
                             GeneroId = 10,
                             Nome = "Take Me Home, Country Roads",
-                            SentimentoId = 1,
                             Velocidade = 82
                         },
                         new
                         {
                             Id = 14,
                             Cantor = "Coldplay",
+                            EmocaoId = 10,
                             GeneroId = 1,
                             Nome = "Yellow",
-                            SentimentoId = 10,
                             Velocidade = 87
                         },
                         new
                         {
                             Id = 15,
                             Cantor = "Coldplay",
+                            EmocaoId = 8,
                             GeneroId = 11,
                             Nome = "The Scientist",
-                            SentimentoId = 8,
                             Velocidade = 73
                         },
                         new
                         {
                             Id = 16,
                             Cantor = "Journey",
+                            EmocaoId = 7,
                             GeneroId = 4,
                             Nome = "Don't Stop Believin'",
-                            SentimentoId = 7,
                             Velocidade = 119
                         },
                         new
                         {
                             Id = 17,
                             Cantor = "Bryan Adams",
+                            EmocaoId = 6,
                             GeneroId = 4,
                             Nome = "Summer Of '69",
-                            SentimentoId = 6,
                             Velocidade = 138
                         },
                         new
                         {
                             Id = 18,
                             Cantor = "Red Hot Chili Peppers",
+                            EmocaoId = 9,
                             GeneroId = 12,
                             Nome = "Can't Stop",
-                            SentimentoId = 9,
                             Velocidade = 91
                         },
                         new
                         {
                             Id = 19,
                             Cantor = "Avicii",
+                            EmocaoId = 7,
                             GeneroId = 7,
                             Nome = "Wake Me Up",
-                            SentimentoId = 7,
                             Velocidade = 124
                         },
                         new
                         {
                             Id = 20,
                             Cantor = "Guns N' Roses",
+                            EmocaoId = 6,
                             GeneroId = 4,
                             Nome = "Sweet Child O' Mine",
-                            SentimentoId = 6,
                             Velocidade = 125
                         });
                 });
 
-            modelBuilder.Entity("Sinesify.Music", b =>
+            modelBuilder.Entity("Sinesify.Musica", b =>
                 {
+                    b.HasOne("Sinesify.Emocao", "Emocao")
+                        .WithMany("Musicas")
+                        .HasForeignKey("EmocaoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Sinesify.Genero", "Genero")
                         .WithMany("Musicas")
                         .HasForeignKey("GeneroId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Sinesify.Emoção", "Sentimento")
-                        .WithMany("Musicas")
-                        .HasForeignKey("SentimentoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Emocao");
 
                     b.Navigation("Genero");
-
-                    b.Navigation("Sentimento");
                 });
 
-            modelBuilder.Entity("Sinesify.Emoção", b =>
+            modelBuilder.Entity("Sinesify.Emocao", b =>
                 {
                     b.Navigation("Musicas");
                 });
