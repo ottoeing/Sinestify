@@ -20,7 +20,7 @@ namespace Sinesify
             var servicos = new ServiceCollection();
 
             servicos.AddDbContext<ContextoSinestify>(opcoes =>
-                opcoes.UseMySql(stringConexao, ServerVersion.AutoDetect(stringConexao)));
+                opcoes.UseMySql(stringConexao, new MySqlServerVersion(new Version(8, 0, 0))));
             servicos.AddScoped<RepositorioMusicas>();
             servicos.AddScoped<Menu>();
 

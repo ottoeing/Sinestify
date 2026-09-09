@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sinesify;
 
@@ -10,9 +11,11 @@ using Sinesify;
 namespace Sinestify.Migrations
 {
     [DbContext(typeof(ContextoSinestify))]
-    partial class ContextoSinestifyModelSnapshot : ModelSnapshot
+    [Migration("20260909005214_RestringirRelacionamentosEDefinirConstraints")]
+    partial class RestringirRelacionamentosEDefinirConstraints
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
