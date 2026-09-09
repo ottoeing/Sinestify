@@ -4,7 +4,16 @@ namespace Sinesify;
 
 public class ContextoSinestify : DbContext
 {
-    private const string StringConexao = "Server=127.0.0.1;Port=3306;Database=sinestify;Uid=root;Pwd=1234;SslMode=None;AllowPublicKeyRetrieval=True;ConnectionTimeout=30;";
+    private const string StringConexaoPadrao = "Server=127.0.0.1;Port=3306;Database=sinestify;Uid=root;Pwd=1234;SslMode=None;AllowPublicKeyRetrieval=True;ConnectionTimeout=30;";
+
+    public ContextoSinestify()
+    {
+    }
+
+    public ContextoSinestify(DbContextOptions<ContextoSinestify> options)
+        : base(options)
+    {
+    }
 
     public DbSet<Musica> Musicas => Set<Musica>();
     public DbSet<Genero> Generos => Set<Genero>();
@@ -14,21 +23,64 @@ public class ContextoSinestify : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseMySql(StringConexao, ServerVersion.AutoDetect(StringConexao));
+            var stringConexao = Environment.GetEnvironmentVariable("ConnectionStrings__Sinestify")
+                ?? StringConexaoPadrao;
+
+            optionsBuilder.UseMySql(stringConexao, new MySqlServerVersion(new Version(8, 0, 0)));
         }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Genero>(entity =>
+        {
+            entity.ToTable("Generos");
+            entity.HasKey(g => g.Id);
+            entity.Property(g => g.Nome)
+                .IsRequired()
+                .HasMaxLength(100);
+            entity.HasIndex(g => g.Nome)
+                .IsUnique();
+        });
+
+        modelBuilder.Entity<Emocao>(entity =>
+        {
+            entity.ToTable("Emocoes");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Sentimento)
+                .IsRequired()
+                .HasMaxLength(100);
+            entity.HasIndex(e => e.Sentimento)
+                .IsUnique();
+        });
+
+        modelBuilder.Entity<Musica>(entity =>
+        {
+            entity.ToTable("Musicas");
+            entity.HasKey(m => m.Id);
+            entity.Property(m => m.Nome)
+                .IsRequired()
+                .HasMaxLength(200);
+            entity.Property(m => m.Cantor)
+                .IsRequired()
+                .HasMaxLength(200);
+            entity.Property(m => m.Velocidade)
+                .IsRequired();
+        });
+
         modelBuilder.Entity<Musica>()
             .HasOne(m => m.Genero)
             .WithMany(g => g.Musicas)
-            .HasForeignKey(m => m.GeneroId);
+            .HasForeignKey(m => m.GeneroId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Musica>()
             .HasOne(m => m.Emocao)
             .WithMany(e => e.Musicas)
-            .HasForeignKey(m => m.EmocaoId);
+            .HasForeignKey(m => m.EmocaoId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Emocao>().HasData(
             new { Id = 1, Sentimento = "Alegria" }, new { Id = 2, Sentimento = "Tristeza" },
