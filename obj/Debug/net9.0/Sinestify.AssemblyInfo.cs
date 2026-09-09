@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Sinestify")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fe3ea6f60a27aad0c2ef182f5cbc1c14f8eeb5c4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+73e1ac2dca3ceb0706addb7eb85ed216cb3ed9af")]
 [assembly: System.Reflection.AssemblyProductAttribute("Sinestify")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Sinestify")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
