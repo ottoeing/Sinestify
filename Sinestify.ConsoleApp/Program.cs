@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Sinesify
@@ -7,9 +8,19 @@ namespace Sinesify
     {
         static void Main(string[] args)
         {
+            var configuracao = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
+                .AddEnvironmentVariables()
+                .Build();
+
+            var stringConexao = configuracao.GetConnectionString("Sinestify")
+                ?? throw new InvalidOperationException("A connection string 'Sinestify' não foi configurada.");
+
             var servicos = new ServiceCollection();
 
-            servicos.AddDbContext<ContextoSinestify>();
+            servicos.AddDbContext<ContextoSinestify>(opcoes =>
+                opcoes.UseMySql(stringConexao, ServerVersion.AutoDetect(stringConexao)));
             servicos.AddScoped<RepositorioMusicas>();
             servicos.AddScoped<Menu>();
 

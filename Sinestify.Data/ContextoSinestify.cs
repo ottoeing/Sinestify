@@ -4,7 +4,16 @@ namespace Sinesify;
 
 public class ContextoSinestify : DbContext
 {
-    private const string StringConexao = "Server=127.0.0.1;Port=3306;Database=sinestify;Uid=root;Pwd=1234;SslMode=None;AllowPublicKeyRetrieval=True;ConnectionTimeout=30;";
+    private const string StringConexaoPadrao = "Server=127.0.0.1;Port=3306;Database=sinestify;Uid=root;Pwd=1234;SslMode=None;AllowPublicKeyRetrieval=True;ConnectionTimeout=30;";
+
+    public ContextoSinestify()
+    {
+    }
+
+    public ContextoSinestify(DbContextOptions<ContextoSinestify> options)
+        : base(options)
+    {
+    }
 
     public DbSet<Musica> Musicas => Set<Musica>();
     public DbSet<Genero> Generos => Set<Genero>();
@@ -14,7 +23,10 @@ public class ContextoSinestify : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseMySql(StringConexao, ServerVersion.AutoDetect(StringConexao));
+            var stringConexao = Environment.GetEnvironmentVariable("ConnectionStrings__Sinestify")
+                ?? StringConexaoPadrao;
+
+            optionsBuilder.UseMySql(stringConexao, ServerVersion.AutoDetect(stringConexao));
         }
     }
 
