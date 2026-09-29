@@ -1,17 +1,23 @@
+using Sinesify.Service;
+
 namespace Sinesify
 {
     public class Menu
     {
-        private readonly RepositorioMusicas repositorio;
+        private readonly MusicaService musicaService;
+        private readonly GeneroService generoService;
+        private readonly EmocaoService emocaoService;
         private readonly Tocador tocador;
 
-        public Menu(RepositorioMusicas repositorio)
+        public Menu(MusicaService musicaService, GeneroService generoService, EmocaoService emocaoService)
         {
-            this.repositorio = repositorio;
+            this.musicaService = musicaService;
+            this.generoService = generoService;
+            this.emocaoService = emocaoService;
             tocador = new Tocador();
         }
 
-        public void Iniciar()
+        public async Task IniciarAsync()
         {
             while (true)
             {
@@ -35,11 +41,11 @@ namespace Sinesify
 
                 switch (opcao)
                 {
-                    case "1": ListarMusicas(); break;
-                    case "2": CadastrarMusica(); break;
-                    case "3": EditarMusica(); break;
-                    case "4": ExcluirMusica(); break;
-                    case "5": TocarMusica(); break;
+                    case "1": await ListarMusicasAsync(); break;
+                    case "2": await CadastrarMusicaAsync(); break;
+                    case "3": await EditarMusicaAsync(); break;
+                    case "4": await ExcluirMusicaAsync(); break;
+                    case "5": await TocarMusicaAsync(); break;
                     case "6": return;
                     default:
                         Avisar("Opção inválida.");
@@ -48,10 +54,17 @@ namespace Sinesify
             }
         }
 
-        private void ListarMusicas(bool pausar = true)
+        private async Task ListarMusicasAsync(bool pausar = true)
         {
             Console.Clear();
-            var musicas = repositorio.ListarMusicas();
+            var resultado = await musicaService.ListarAsync();
+            if (!resultado.Sucesso)
+            {
+                Avisar(resultado.Mensagem);
+                return;
+            }
+
+            var musicas = resultado.Valor!;
             Console.WriteLine("========== LISTA DE MÚSICAS ==========");
             foreach (var musica in musicas)
             {
@@ -64,90 +77,106 @@ namespace Sinesify
                 Pausar();
         }
 
-        private void CadastrarMusica()
+        private async Task CadastrarMusicaAsync()
         {
             Console.Clear();
             Console.WriteLine("========== NOVA MÚSICA ==========");
-            repositorio.Adicionar(LerDadosMusica());
-            Avisar("Música cadastrada com sucesso.");
+            var resultado = await musicaService.AdicionarAsync(await LerDadosMusicaAsync());
+            Avisar(resultado.Mensagem);
         }
 
-        private void EditarMusica()
+        private async Task EditarMusicaAsync()
         {
-            ListarMusicas(false);
+            await ListarMusicasAsync(false);
             int id = LerInteiro("\nID da música");
-            var musica = repositorio.ObterPorId(id);
-            if (musica is null)
+            var resultado = await musicaService.ObterPorIdAsync(id);
+            if (!resultado.Sucesso)
             {
-                Avisar("Música não encontrada.");
+                Avisar(resultado.Mensagem);
                 return;
             }
 
+            var musica = resultado.Valor!;
             musica.Nome = LerTexto("Nome", musica.Nome);
             musica.Cantor = LerTexto("Cantor", musica.Cantor);
-            musica.GeneroId = EscolherGenero(musica.GeneroId);
-            musica.EmocaoId = EscolherEmocao(musica.EmocaoId);
+            musica.GeneroId = await EscolherGeneroAsync(musica.GeneroId);
+            musica.EmocaoId = await EscolherEmocaoAsync(musica.EmocaoId);
             musica.Velocidade = LerInteiro("Velocidade BPM", musica.Velocidade);
-            repositorio.Atualizar(musica);
-            Avisar("Música atualizada com sucesso.");
+            resultado = await musicaService.AtualizarAsync(musica);
+            Avisar(resultado.Mensagem);
         }
 
-        private void ExcluirMusica()
+        private async Task ExcluirMusicaAsync()
         {
-            ListarMusicas(false);
+            await ListarMusicasAsync(false);
             int id = LerInteiro("\nID da música");
-            var musica = repositorio.ObterPorId(id);
-            if (musica is null)
+            var resultado = await musicaService.ObterPorIdAsync(id);
+            if (!resultado.Sucesso)
             {
-                Avisar("Música não encontrada.");
+                Avisar(resultado.Mensagem);
                 return;
             }
 
+            var musica = resultado.Valor!;
             Console.Write($"Excluir \"{musica.Nome}\"? (s/n): ");
             if (Console.ReadLine()?.Trim().Equals("s", StringComparison.OrdinalIgnoreCase) == true)
             {
-                repositorio.Excluir(id);
-                Avisar("Música excluída com sucesso.");
+                var resultadoExclusao = await musicaService.ExcluirAsync(id);
+                Avisar(resultadoExclusao.Mensagem);
             }
         }
 
-        private void TocarMusica()
+        private async Task TocarMusicaAsync()
         {
-            ListarMusicas(false);
+            await ListarMusicasAsync(false);
             int id = LerInteiro("\nID da música");
-            var musica = repositorio.ObterPorId(id);
-            if (musica is null)
+            var resultado = await musicaService.ObterPorIdAsync(id);
+            if (!resultado.Sucesso)
             {
-                Avisar("Música não encontrada.");
+                Avisar(resultado.Mensagem);
                 return;
             }
 
-            tocador.Tocar(musica);
+            tocador.Tocar(resultado.Valor!);
         }
 
-        private Musica LerDadosMusica()
+        private async Task<Musica> LerDadosMusicaAsync()
         {
             string nome = LerTexto("Nome");
             string cantor = LerTexto("Cantor");
             return new Musica(nome, cantor)
             {
-                GeneroId = EscolherGenero(),
-                EmocaoId = EscolherEmocao(),
+                GeneroId = await EscolherGeneroAsync(),
+                EmocaoId = await EscolherEmocaoAsync(),
                 Velocidade = LerInteiro("Velocidade BPM")
             };
         }
 
-        private int EscolherGenero(int atual = 0)
+        private async Task<int> EscolherGeneroAsync(int atual = 0)
         {
-            var generos = repositorio.ListarGeneros();
+            var resultado = await generoService.ListarAsync();
+            if (!resultado.Sucesso)
+            {
+                Console.WriteLine(resultado.Mensagem);
+                return 0;
+            }
+
+            var generos = resultado.Valor!;
             foreach (var genero in generos)
                 Console.WriteLine($"{genero.Id} - {genero.Nome}");
             return EscolherId("Gênero", generos.Select(g => g.Id).ToHashSet(), atual);
         }
 
-        private int EscolherEmocao(int atual = 0)
+        private async Task<int> EscolherEmocaoAsync(int atual = 0)
         {
-            var emocoes = repositorio.ListarEmocoes();
+            var resultado = await emocaoService.ListarAsync();
+            if (!resultado.Sucesso)
+            {
+                Console.WriteLine(resultado.Mensagem);
+                return 0;
+            }
+
+            var emocoes = resultado.Valor!;
             foreach (var emocao in emocoes)
                 Console.WriteLine($"{emocao.Id} - {emocao.Sentimento}");
             return EscolherId("Emoção", emocoes.Select(e => e.Id).ToHashSet(), atual);
