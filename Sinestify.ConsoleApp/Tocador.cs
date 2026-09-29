@@ -3,14 +3,19 @@ using System.Threading;
 
 namespace Sinesify
 {
-    public class Player
+    public class Tocador
     {
-        private Random random = new Random();
+        private Random aleatorio = new Random();
 
-        public void Executar(Music music)
+        public void Tocar(Musica musica)
         {
+            if (musica is null || musica.Id <= 0 || string.IsNullOrWhiteSpace(musica.Nome))
+            {
+                return;
+            }
+
             Console.CursorVisible = false;
-            double time = 0;
+            double tempo = 0;
 
             try
             {
@@ -20,26 +25,26 @@ namespace Sinesify
                     Console.Clear();
 
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"Tocando: {music.Nome}");
-                    Console.WriteLine($"Artista: {music.Cantor}");
+                    Console.WriteLine($"Tocando: {musica.Nome}");
+                    Console.WriteLine($"Artista: {musica.Cantor}");
                     Console.ResetColor();
                     Console.WriteLine();
 
                     const int columns = 15;
                     const int maxHeight = 12;
-                    ConsoleColor waveColor = ObterCorPorSentimento(music);
+                    ConsoleColor corOnda = ObterCorPorEmocao(musica);
 
                     for (int row = maxHeight; row >= 1; row--)
                     {
-                        Console.ForegroundColor = waveColor;
+                        Console.ForegroundColor = corOnda;
                         for (int col = 0; col < columns; col++)
                         {
                             double value =
-                                Math.Sin(time + col * 0.35) * Math.Sin(time * 0.6) +
-                                Math.Sin(time * 0.4 + col * 0.2) * Math.Cos(time * 0.3) +
-                                Math.Sin(time * 0.8 + col * 0.5) * 0.5;
+                                Math.Sin(tempo + col * 0.35) * Math.Sin(tempo * 0.6) +
+                                Math.Sin(tempo * 0.4 + col * 0.2) * Math.Cos(tempo * 0.3) +
+                                Math.Sin(tempo * 0.8 + col * 0.5) * 0.5;
 
-                            value += (random.NextDouble() - 0.5) * 0.3;
+                            value += (aleatorio.NextDouble() - 0.5) * 0.3;
 
                             int height = (int)((value + 1.5) * (maxHeight / 3.0));
                             height = Math.Max(0, Math.Min(maxHeight, height));
@@ -54,8 +59,8 @@ namespace Sinesify
                     Console.WriteLine();
                     Console.WriteLine("Pressione qualquer tecla para voltar...");
 
-                    time += ObterIncrementoPorVelocidade(music.Velocidade);
-                    Thread.Sleep(ObterDelayPorVelocidade(music.Velocidade));
+                    tempo += ObterIncrementoPorVelocidade(musica.Velocidade);
+                    Thread.Sleep(ObterAtrasoPorVelocidade(musica.Velocidade));
                 }
 
                 Console.ReadKey(true);
@@ -66,10 +71,10 @@ namespace Sinesify
             }
         }
 
-        private ConsoleColor ObterCorPorSentimento(Music music)
+        private ConsoleColor ObterCorPorEmocao(Musica musica)
         {
-            string sentimento = music.Sentimento?.Sentimento?.ToLowerInvariant() ?? string.Empty;
-            return sentimento switch
+            string emocao = musica.Emocao?.Sentimento?.ToLowerInvariant() ?? string.Empty;
+            return emocao switch
             {
                 "alegria" => ConsoleColor.Yellow,
                 "tristeza" => ConsoleColor.Blue,
@@ -91,7 +96,7 @@ namespace Sinesify
             return 0.05 + (vel / 200.0) * 1.00;
         }
 
-        private int ObterDelayPorVelocidade(int velocidade)
+        private int ObterAtrasoPorVelocidade(int velocidade)
         {
             int vel = Math.Max(1, Math.Min(200, velocidade));
             return 100 - (int)((vel / 200.0) * 60);
