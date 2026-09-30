@@ -7,7 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Sinestify.Business\Sinestify.Business.csproj" />
     <ProjectReference Include="..\Sinestify.Data\Sinestify.Data.csproj" />
+    <ProjectReference Include="..\Sinestify.Service\Sinestify.Service.csproj" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
