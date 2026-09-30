@@ -12,4 +12,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Sinestify.Business\Sinestify.Business.csproj" />
+    <ProjectReference Include="..\Sinestify.Data\Sinestify.Data.csproj" />
+    <ProjectReference Include="..\Sinestify.Model\Sinestify.Model.csproj" />
+  </ItemGroup>
+
 </Project>
