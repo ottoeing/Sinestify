@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
+using Microsoft.EntityFrameworkCore;
 
 namespace Sinesify;
 
@@ -18,6 +18,7 @@ public class RepositorioMusicas
             () => conexao.Musicas
                 .Include(m => m.Genero)
                 .Include(m => m.Emocao)
+                .AsNoTracking()
                 .OrderBy(m => m.Id)
                 .ToList(),
             "Não foi possível listar as músicas.");
@@ -29,18 +30,40 @@ public class RepositorioMusicas
             () => conexao.Musicas
                 .Include(m => m.Genero)
                 .Include(m => m.Emocao)
+                .AsNoTracking()
                 .SingleOrDefault(m => m.Id == id),
             "Não foi possível consultar a música.");
     }
 
-    public void Adicionar(Musica musica)
+    public List<Genero> ListarGeneros()
+    {
+        return Executar(
+            () => conexao.Generos
+                .AsNoTracking()
+                .OrderBy(g => g.Id)
+                .ToList(),
+            "Não foi possível listar os gêneros.");
+    }
+
+    public List<Emocao> ListarEmocoes()
+    {
+        return Executar(
+            () => conexao.Emocoes
+                .AsNoTracking()
+                .OrderBy(e => e.Id)
+                .ToList(),
+            "Não foi possível listar as emoções.");
+    }
+
+    public Musica Adicionar(Musica musica)
     {
         ArgumentNullException.ThrowIfNull(musica);
 
-        Executar(() =>
+        return Executar(() =>
         {
             conexao.Musicas.Add(musica);
             conexao.SaveChanges();
+            return ObterPorId(musica.Id)!;
         }, "Não foi possível cadastrar a música.");
     }
 
@@ -60,6 +83,11 @@ public class RepositorioMusicas
             conexao.SaveChanges();
             return true;
         }, "Não foi possível atualizar a música.");
+    }
+
+    public bool Excluir(int id)
+    {
+        return Remover(id);
     }
 
     public bool Remover(int id)
@@ -88,15 +116,6 @@ public class RepositorioMusicas
         {
             throw new ErroPersistenciaException(mensagem, exception);
         }
-    }
-
-    private static void Executar(Action operacao, string mensagem)
-    {
-        Executar(() =>
-        {
-            operacao();
-            return true;
-        }, mensagem);
     }
 }
 

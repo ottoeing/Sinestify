@@ -1,5 +1,10 @@
 bin/
 obj/
 .vs/
+TestResults/
+coverage/
 *.user
 *.suo
+*.db
+*.db-shm
+*.db-wal
