@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sinestify.Business\Sinestify.Business.csproj" />
+    <ProjectReference Include="..\Sinestify.Data\Sinestify.Data.csproj" />
+    <ProjectReference Include="..\Sinestify.Model\Sinestify.Model.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

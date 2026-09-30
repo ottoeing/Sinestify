@@ -14,5 +14,8 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sinestify.Service\Sinestify.Service.csproj" />
+  </ItemGroup>
 
 </Project>
