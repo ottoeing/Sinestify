@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Sinestify-main\\Sinestify\\Sinestify.csproj": {}
+    "C:\\Users\\Otto\\Documents\\Sinestify\\Sinestify.csproj": {}
   },
   "projects": {
-    "C:\\Sinestify-main\\Sinestify\\Sinestify.csproj": {
+    "C:\\Users\\Otto\\Documents\\Sinestify\\Sinestify.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Sinestify-main\\Sinestify\\Sinestify.csproj",
+        "projectUniqueName": "C:\\Users\\Otto\\Documents\\Sinestify\\Sinestify.csproj",
         "projectName": "Sinestify",
-        "projectPath": "C:\\Sinestify-main\\Sinestify\\Sinestify.csproj",
-        "packagesPath": "C:\\Users\\leand\\.nuget\\packages\\",
-        "outputPath": "C:\\Sinestify-main\\Sinestify\\obj\\",
+        "projectPath": "C:\\Users\\Otto\\Documents\\Sinestify\\Sinestify.csproj",
+        "packagesPath": "C:\\Users\\Otto\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Otto\\Documents\\Sinestify\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\leand\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Otto\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -59,7 +59,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.311/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
