@@ -2,38 +2,38 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sinesify;
 
-public sealed class RepositorioUsuarios(ContextoSinestify conexao)
+public sealed class RepositorioUsuarios
 {
-    public Task<Usuario?> ObterPorEmailAsync(string email, CancellationToken cancellationToken = default)
+    private readonly ContextoSinestify conexao = new();
+
+    public Usuario? ObterPorEmail(string email)
     {
         return conexao.Usuarios
             .AsNoTracking()
-            .SingleOrDefaultAsync(usuario => usuario.Email == email, cancellationToken);
+            .SingleOrDefault(usuario => usuario.Email == email);
     }
 
-    public Task<Usuario?> ObterPorIdAsync(int id, CancellationToken cancellationToken = default)
+    public Usuario? ObterPorId(int id)
     {
         return conexao.Usuarios
             .AsNoTracking()
-            .SingleOrDefaultAsync(usuario => usuario.Id == id, cancellationToken);
+            .SingleOrDefault(usuario => usuario.Id == id);
     }
 
-    public async Task<Usuario?> AdicionarAsync(Usuario usuario, CancellationToken cancellationToken = default)
+    public Usuario? Adicionar(Usuario usuario)
     {
         conexao.Usuarios.Add(usuario);
 
         try
         {
-            await conexao.SaveChangesAsync(cancellationToken);
+            conexao.SaveChanges();
             return usuario;
         }
         catch (DbUpdateException)
         {
             conexao.Entry(usuario).State = EntityState.Detached;
 
-            if (await conexao.Usuarios.AnyAsync(
-                    existente => existente.Email == usuario.Email,
-                    cancellationToken))
+            if (conexao.Usuarios.Any(existente => existente.Email == usuario.Email))
             {
                 return null;
             }

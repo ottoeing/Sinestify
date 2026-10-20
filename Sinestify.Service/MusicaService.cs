@@ -8,64 +8,50 @@ public class MusicaService
     private readonly MusicaBusiness business;
     private readonly RepositorioMusicas repositorio;
 
-    public MusicaService(MusicaBusiness business, RepositorioMusicas repositorio)
+    public MusicaService()
     {
-        this.business = business;
-        this.repositorio = repositorio;
+        business = new MusicaBusiness();
+        repositorio = new RepositorioMusicas();
     }
 
-    public async Task<ResultadoService<IReadOnlyList<Musica>>> ListarAsync(CancellationToken cancellationToken = default)
+    public List<Musica> Listar()
     {
-        var musicas = await repositorio.ListarAsync(cancellationToken);
-        return ResultadoService<IReadOnlyList<Musica>>.Ok(musicas);
+        return repositorio.Listar();
     }
 
-    public async Task<ResultadoService<Musica>> ObterPorIdAsync(int id, CancellationToken cancellationToken = default)
+    public Musica? ObterPorId(int id)
     {
         if (id <= 0)
-            return ResultadoService<Musica>.DadosInvalidos(["O identificador da música deve ser maior que zero."]);
+            return null;
 
-        var musica = await repositorio.ObterPorIdAsync(id, cancellationToken);
-        return musica is null
-            ? ResultadoService<Musica>.NaoEncontrado("Música não encontrada.")
-            : ResultadoService<Musica>.Ok(musica);
+        return repositorio.ObterPorId(id);
     }
 
-    public async Task<ResultadoService<Musica>> AdicionarAsync(Musica musica, CancellationToken cancellationToken = default)
+    public Musica? Adicionar(Musica musica)
     {
-        var erros = business.Validar(musica);
-        if (erros.Count > 0)
-            return ResultadoService<Musica>.DadosInvalidos(erros);
+        if (!business.Validar(musica))
+            return null;
 
-        var criada = await repositorio.AdicionarAsync(musica, cancellationToken);
-        return ResultadoService<Musica>.Ok(criada, "Música cadastrada com sucesso.");
+        return repositorio.Adicionar(musica);
     }
 
-    public async Task<ResultadoService<Musica>> AtualizarAsync(Musica musica, CancellationToken cancellationToken = default)
+    public Musica? Atualizar(Musica musica)
     {
-        if (musica.Id <= 0)
-            return ResultadoService<Musica>.DadosInvalidos(["O identificador da música deve ser maior que zero."]);
+        if (musica.Id <= 0 || !business.Validar(musica))
+            return null;
 
-        var erros = business.Validar(musica);
-        if (erros.Count > 0)
-            return ResultadoService<Musica>.DadosInvalidos(erros);
-
-        var atualizada = await repositorio.AtualizarAsync(musica, cancellationToken);
+        var atualizada = repositorio.Atualizar(musica);
         if (!atualizada)
-            return ResultadoService<Musica>.NaoEncontrado("Música não encontrada.");
+            return null;
 
-        var resultado = await repositorio.ObterPorIdAsync(musica.Id, cancellationToken);
-        return ResultadoService<Musica>.Ok(resultado!, "Música atualizada com sucesso.");
+        return repositorio.ObterPorId(musica.Id);
     }
 
-    public async Task<ResultadoService<bool>> ExcluirAsync(int id, CancellationToken cancellationToken = default)
+    public bool Excluir(int id)
     {
         if (id <= 0)
-            return ResultadoService<bool>.DadosInvalidos(["O identificador da música deve ser maior que zero."]);
+            return false;
 
-        var excluida = await repositorio.ExcluirAsync(id, cancellationToken);
-        return excluida
-            ? ResultadoService<bool>.Ok(true, "Música excluída com sucesso.")
-            : ResultadoService<bool>.NaoEncontrado("Música não encontrada.");
+        return repositorio.Excluir(id);
     }
 }

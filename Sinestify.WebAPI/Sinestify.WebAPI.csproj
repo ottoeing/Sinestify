@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.20" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.20" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -16,8 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sinestify.Data\Sinestify.Data.csproj" />
-    <ProjectReference Include="..\Sinestify.Model\Sinestify.Model.csproj" />
+    <ProjectReference Include="..\Sinestify.Service\Sinestify.Service.csproj" />
   </ItemGroup>
 
 </Project>

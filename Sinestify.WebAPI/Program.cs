@@ -1,72 +1,122 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Sinesify;
-using Sinestify.WebAPI.Services;
+using Sinesify.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("Sinestify")
-    ?? throw new InvalidOperationException("A connection string 'Sinestify' precisa ser configurada.");
-var jwtSection = builder.Configuration.GetSection("Authentication:Jwt");
-var secretKey = jwtSection["SecretKey"]
-    ?? throw new InvalidOperationException("A configuração Authentication:Jwt:SecretKey é obrigatória.");
-var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
-if (secretKeyBytes.Length < 32)
+builder.Services.ConfigureHttpJsonOptions(options =>
 {
-    throw new InvalidOperationException("A chave JWT deve ter pelo menos 32 bytes.");
-}
+    options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 
-var issuer = jwtSection["Issuer"] ?? "Sinestify";
-var audience = jwtSection["Audience"] ?? "Sinestify";
-var signingKey = new SymmetricSecurityKey(secretKeyBytes);
+var jwtSettings = builder.Configuration.GetSection("JWTSettings");
+var secretKey = jwtSettings["SecretKey"]
+    ?? throw new InvalidOperationException("A configuração JWTSettings:SecretKey é obrigatória.");
+var secretKeyBytes = Encoding.ASCII.GetBytes(secretKey);
 
-builder.Services.AddDbContext<ContextoSinestify>(options =>
-    options.UseSinestifyMySql(connectionString));
-builder.Services.AddScoped<RepositorioUsuarios>();
-builder.Services.AddScoped<PasswordHasher<Usuario>>();
-builder.Services.AddSingleton(new TokenService(signingKey, issuer, audience));
-builder.Services.AddScoped<IAuthApiService, AuthApiService>();
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = "JwtBearer";
+    options.DefaultChallengeScheme = "JwtBearer";
+}).AddJwtBearer("JwtBearer", options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidIssuer = issuer,
-            ValidateAudience = true,
-            ValidAudience = audience,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = signingKey,
-            ClockSkew = TimeSpan.Zero
-        };
-    });
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
+        ClockSkew = TimeSpan.Zero
+    };
+});
 builder.Services.AddAuthorization();
-builder.Services.AddOpenApi();
-builder.Services.AddProblemDetails();
-
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    });
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
-app.UseExceptionHandler();
-app.UseStatusCodePages();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
+
+app.MapPost("/login/auth", ([FromBody] Usuario usuario) =>
+{
+    var usuarioAutenticado = new UsuarioService().Login(usuario);
+    if (usuarioAutenticado is null)
+    {
+        return Results.Unauthorized();
+    }
+
+    return Results.Ok(new TokenService(builder.Configuration).GerarToken(usuarioAutenticado));
+});
+
+var usuariosGroup = app.MapGroup("/usuarios");
+
+usuariosGroup.MapPost("/registrar", ([FromBody] Usuario usuario) =>
+{
+    var usuarioCriado = new UsuarioService().Registrar(usuario);
+    if (usuarioCriado is null)
+    {
+        return Results.BadRequest(new { mensagem = "Não foi possível registrar o usuário." });
+    }
+
+    return Results.Ok(usuarioCriado);
+});
+
+usuariosGroup.MapPost("/login", ([FromBody] Usuario usuario) =>
+{
+    var usuarioAutenticado = new UsuarioService().Login(usuario);
+    if (usuarioAutenticado is null)
+    {
+        return Results.BadRequest(new { mensagem = "Credenciais inválidas." });
+    }
+
+    return Results.Ok(usuarioAutenticado);
+});
+
+var musicasGroup = app.MapGroup("/api/musicas").RequireAuthorization();
+
+musicasGroup.MapGet("/", () => new MusicaService().Listar());
+
+musicasGroup.MapGet("/{id:int}", (int id) =>
+{
+    var musica = new MusicaService().ObterPorId(id);
+    return musica is null ? Results.NotFound() : Results.Ok(musica);
+});
+
+musicasGroup.MapPost("/", ([FromBody] Musica musica) =>
+{
+    musica.Id = 0;
+    var musicaCriada = new MusicaService().Adicionar(musica);
+    return musicaCriada is null
+        ? Results.BadRequest(new { mensagem = "Não foi possível cadastrar a música." })
+        : Results.Ok(musicaCriada);
+});
+
+musicasGroup.MapPut("/{id:int}", (int id, [FromBody] Musica musica) =>
+{
+    musica.Id = id;
+    var musicaAtualizada = new MusicaService().Atualizar(musica);
+    return musicaAtualizada is null
+        ? Results.BadRequest(new { mensagem = "Não foi possível atualizar a música." })
+        : Results.Ok(musicaAtualizada);
+});
+
+musicasGroup.MapDelete("/{id:int}", (int id) =>
+{
+    return new MusicaService().Excluir(id)
+        ? Results.Ok("Música removida com sucesso.")
+        : Results.NotFound();
+});
+
+app.MapGet("/api/generos", () => new GeneroService().Listar())
+.RequireAuthorization();
+
+app.MapGet("/api/emocoes", () => new EmocaoService().Listar())
+.RequireAuthorization();
 
 app.Run();

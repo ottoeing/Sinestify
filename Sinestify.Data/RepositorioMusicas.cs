@@ -1,46 +1,40 @@
-using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace Sinesify;
 
 public class RepositorioMusicas
 {
-    private readonly ContextoSinestify conexao;
+    private readonly ContextoSinestify conexao = new();
 
-    public RepositorioMusicas(ContextoSinestify conexao)
+    public List<Musica> Listar()
     {
-        this.conexao = conexao;
-    }
-
-    public async Task<List<Musica>> ListarAsync(CancellationToken cancellationToken = default)
-    {
-        return await conexao.Musicas
+        return conexao.Musicas
             .Include(m => m.Genero)
             .Include(m => m.Emocao)
             .AsNoTracking()
             .OrderBy(m => m.Id)
-            .ToListAsync(cancellationToken);
+            .ToList();
     }
 
-    public async Task<Musica?> ObterPorIdAsync(int id, CancellationToken cancellationToken = default)
+    public Musica? ObterPorId(int id)
     {
-        return await conexao.Musicas
+        return conexao.Musicas
             .Include(m => m.Genero)
             .Include(m => m.Emocao)
             .AsNoTracking()
-            .SingleOrDefaultAsync(m => m.Id == id, cancellationToken);
+            .SingleOrDefault(m => m.Id == id);
     }
 
-    public async Task<Musica> AdicionarAsync(Musica musica, CancellationToken cancellationToken = default)
+    public Musica Adicionar(Musica musica)
     {
         conexao.Musicas.Add(musica);
-        await conexao.SaveChangesAsync(cancellationToken);
-        return (await ObterPorIdAsync(musica.Id, cancellationToken))!;
+        conexao.SaveChanges();
+        return ObterPorId(musica.Id)!;
     }
 
-    public async Task<bool> AtualizarAsync(Musica musica, CancellationToken cancellationToken = default)
+    public bool Atualizar(Musica musica)
     {
-        var musicaPersistida = await conexao.Musicas.SingleOrDefaultAsync(m => m.Id == musica.Id, cancellationToken);
+        var musicaPersistida = conexao.Musicas.SingleOrDefault(m => m.Id == musica.Id);
         if (musicaPersistida is null)
             return false;
 
@@ -49,18 +43,18 @@ public class RepositorioMusicas
         musicaPersistida.GeneroId = musica.GeneroId;
         musicaPersistida.EmocaoId = musica.EmocaoId;
         musicaPersistida.Velocidade = musica.Velocidade;
-        await conexao.SaveChangesAsync(cancellationToken);
+        conexao.SaveChanges();
         return true;
     }
 
-    public async Task<bool> ExcluirAsync(int id, CancellationToken cancellationToken = default)
+    public bool Excluir(int id)
     {
-        var musica = await conexao.Musicas.FindAsync(new object[] { id }, cancellationToken);
+        var musica = conexao.Musicas.Find(id);
         if (musica is null)
             return false;
 
         conexao.Musicas.Remove(musica);
-        await conexao.SaveChangesAsync(cancellationToken);
+        conexao.SaveChanges();
         return true;
     }
 }

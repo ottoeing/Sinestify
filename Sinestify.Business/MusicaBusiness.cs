@@ -4,21 +4,19 @@ namespace Sinesify.Business;
 
 public class MusicaBusiness
 {
-    public IReadOnlyList<string> Validar(Musica musica)
+    public bool Validar(Musica musica)
     {
-        var erros = new List<string>();
-
         if (string.IsNullOrWhiteSpace(musica.Nome))
-            erros.Add("O nome da música é obrigatório.");
+            return false;
         if (string.IsNullOrWhiteSpace(musica.Cantor))
-            erros.Add("O cantor é obrigatório.");
+            return false;
         if (musica.GeneroId <= 0)
-            erros.Add("Selecione um gênero válido.");
+            return false;
         if (musica.EmocaoId <= 0)
-            erros.Add("Selecione uma emoção válida.");
+            return false;
         if (musica.Velocidade <= 0)
-            erros.Add("A velocidade deve ser maior que zero.");
+            return false;
 
-        return erros;
+        return true;
     }
 }

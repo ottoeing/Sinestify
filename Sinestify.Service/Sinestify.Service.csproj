@@ -4,6 +4,7 @@
     <ProjectReference Include="..\Sinestify.Business\Sinestify.Business.csproj" />
     <ProjectReference Include="..\Sinestify.Data\Sinestify.Data.csproj" />
     <ProjectReference Include="..\Sinestify.Model\Sinestify.Model.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -13,9 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sinestify.Business\Sinestify.Business.csproj" />
-    <ProjectReference Include="..\Sinestify.Data\Sinestify.Data.csproj" />
-    <ProjectReference Include="..\Sinestify.Model\Sinestify.Model.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.20" />
   </ItemGroup>
 
 </Project>

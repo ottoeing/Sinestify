@@ -7,64 +7,170 @@ namespace Sinesify
         private readonly MusicaService musicaService;
         private readonly GeneroService generoService;
         private readonly EmocaoService emocaoService;
+        private readonly UsuarioService usuarioService;
         private readonly Tocador tocador;
+        private Usuario? usuarioAtual;
+        private bool rodando = true;
 
         public Menu(MusicaService musicaService, GeneroService generoService, EmocaoService emocaoService)
         {
             this.musicaService = musicaService;
             this.generoService = generoService;
             this.emocaoService = emocaoService;
+            usuarioService = new UsuarioService();
             tocador = new Tocador();
         }
 
-        public async Task IniciarAsync()
+        public void Iniciar()
+        {
+            while (rodando)
+            {
+                if (usuarioAtual is null)
+                {
+                    MostrarTelaAutenticacao();
+                    continue;
+                }
+
+                MostrarMenuPrincipal();
+            }
+        }
+
+        private void MostrarTelaAutenticacao()
+        {
+            Console.Clear();
+            Console.WriteLine("=======================================");
+            Console.WriteLine("          ACESSO AO SINESTIFY");
+            Console.WriteLine("=======================================");
+            Console.WriteLine();
+            Console.WriteLine("1 - Registrar usuário");
+            Console.WriteLine("2 - Fazer login");
+            Console.WriteLine("0 - Sair");
+            Console.Write("\nEscolha uma opção: ");
+
+            switch (Console.ReadLine())
+            {
+                case "1":
+                    RegistrarUsuario();
+                    break;
+                case "2":
+                    FazerLogin();
+                    break;
+                case "0":
+                    rodando = false;
+                    break;
+                default:
+                    Avisar("Opção inválida.");
+                    break;
+            }
+        }
+
+        private void RegistrarUsuario()
         {
             while (true)
             {
                 Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("=======================================");
-                Console.WriteLine("               SINESTIFY");
-                Console.WriteLine("=======================================");
-                Console.ResetColor();
-                Console.WriteLine();
-                Console.WriteLine("1 - Listar músicas");
-                Console.WriteLine("2 - Cadastrar música");
-                Console.WriteLine("3 - Editar música");
-                Console.WriteLine("4 - Excluir música");
-                Console.WriteLine("5 - Tocar música");
-                Console.WriteLine("6 - Sair");
-                Console.WriteLine();
-                Console.Write("Escolha: ");
+                Console.WriteLine("========== REGISTRAR USUÁRIO ==========\n");
 
-                string? opcao = Console.ReadLine();
+                var nome = LerTexto("Nome");
+                var email = LerTexto("E-mail");
+                Console.Write("Senha: ");
+                var senha = Console.ReadLine() ?? string.Empty;
 
-                switch (opcao)
+                var usuarioCriado = usuarioService.Registrar(new Usuario
                 {
-                    case "1": await ListarMusicasAsync(); break;
-                    case "2": await CadastrarMusicaAsync(); break;
-                    case "3": await EditarMusicaAsync(); break;
-                    case "4": await ExcluirMusicaAsync(); break;
-                    case "5": await TocarMusicaAsync(); break;
-                    case "6": return;
-                    default:
-                        Avisar("Opção inválida.");
-                        break;
+                    Nome = nome,
+                    Email = email,
+                    Senha = senha
+                });
+
+                if (usuarioCriado is null)
+                {
+                    Avisar("Usuário já existe ou os dados são inválidos.");
+                    continue;
                 }
+
+                usuarioAtual = usuarioCriado;
+                Avisar($"Usuário '{usuarioCriado.Nome}' registrado com sucesso!");
+                return;
             }
         }
 
-        private async Task ListarMusicasAsync(bool pausar = true)
+        private void FazerLogin()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("========== LOGIN ==========\n");
+
+                var email = LerTexto("E-mail");
+                Console.Write("Senha: ");
+                var senha = Console.ReadLine() ?? string.Empty;
+
+                var usuario = usuarioService.Login(new Usuario
+                {
+                    Email = email,
+                    Senha = senha
+                });
+
+                if (usuario is null)
+                {
+                    Avisar("Credenciais inválidas.");
+                    continue;
+                }
+
+                usuarioAtual = usuario;
+                Avisar($"Bem-vindo, {usuario.Nome}!");
+                return;
+            }
+        }
+
+        private void MostrarMenuPrincipal()
         {
             Console.Clear();
-            var resultado = await musicaService.ListarAsync();
-            if (!resultado.Sucesso)
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("=======================================");
+            Console.WriteLine("               SINESTIFY");
+            Console.WriteLine("=======================================");
+            Console.ResetColor();
+            Console.WriteLine($"Usuário: {usuarioAtual!.Nome}");
+            Console.WriteLine();
+            Console.WriteLine("1 - Listar músicas");
+            Console.WriteLine("2 - Cadastrar música");
+            Console.WriteLine("3 - Editar música");
+            Console.WriteLine("4 - Excluir música");
+            Console.WriteLine("5 - Tocar música");
+            Console.WriteLine("0 - Sair da conta");
+            Console.WriteLine("Pressione Enter vazio para sair do aplicativo.");
+            Console.Write("\nEscolha: ");
+
+            var opcao = Console.ReadLine();
+            if (string.IsNullOrEmpty(opcao))
             {
-                Avisar(resultado.Mensagem);
+                rodando = false;
                 return;
             }
 
-            var musicas = resultado.Valor!;
+            switch (opcao)
+            {
+                case "1": ListarMusicas(); break;
+                case "2": CadastrarMusica(); break;
+                case "3": EditarMusica(); break;
+                case "4": ExcluirMusica(); break;
+                case "5": TocarMusica(); break;
+                case "0":
+                    usuarioAtual = null;
+                    Avisar("Conta desconectada.");
+                    break;
+                default:
+                    Avisar("Opção inválida.");
+                    break;
+            }
+        }
+
+        private void ListarMusicas(bool pausar = true)
+        {
+            Console.Clear();
+            var musicas = musicaService.Listar();
             Console.WriteLine("========== LISTA DE MÚSICAS ==========");
             foreach (var musica in musicas)
             {
@@ -77,106 +183,91 @@ namespace Sinesify
                 Pausar();
         }
 
-        private async Task CadastrarMusicaAsync()
+        private void CadastrarMusica()
         {
             Console.Clear();
             Console.WriteLine("========== NOVA MÚSICA ==========");
-            var resultado = await musicaService.AdicionarAsync(await LerDadosMusicaAsync());
-            Avisar(resultado.Mensagem);
+            var musica = musicaService.Adicionar(LerDadosMusica());
+            Avisar(musica is null ? "Não foi possível cadastrar a música." : "Música cadastrada com sucesso.");
         }
 
-        private async Task EditarMusicaAsync()
+        private void EditarMusica()
         {
-            await ListarMusicasAsync(false);
+            ListarMusicas(false);
             int id = LerInteiro("\nID da música");
-            var resultado = await musicaService.ObterPorIdAsync(id);
-            if (!resultado.Sucesso)
+            var musica = musicaService.ObterPorId(id);
+            if (musica is null)
             {
-                Avisar(resultado.Mensagem);
+                Avisar("Música não encontrada.");
                 return;
             }
 
-            var musica = resultado.Valor!;
             musica.Nome = LerTexto("Nome", musica.Nome);
             musica.Cantor = LerTexto("Cantor", musica.Cantor);
-            musica.GeneroId = await EscolherGeneroAsync(musica.GeneroId);
-            musica.EmocaoId = await EscolherEmocaoAsync(musica.EmocaoId);
+            musica.GeneroId = EscolherGenero(musica.GeneroId);
+            musica.EmocaoId = EscolherEmocao(musica.EmocaoId);
             musica.Velocidade = LerInteiro("Velocidade BPM", musica.Velocidade);
-            resultado = await musicaService.AtualizarAsync(musica);
-            Avisar(resultado.Mensagem);
+            var musicaAtualizada = musicaService.Atualizar(musica);
+            Avisar(musicaAtualizada is null ? "Não foi possível atualizar a música." : "Música atualizada com sucesso.");
         }
 
-        private async Task ExcluirMusicaAsync()
+        private void ExcluirMusica()
         {
-            await ListarMusicasAsync(false);
+            ListarMusicas(false);
             int id = LerInteiro("\nID da música");
-            var resultado = await musicaService.ObterPorIdAsync(id);
-            if (!resultado.Sucesso)
+            var musica = musicaService.ObterPorId(id);
+            if (musica is null)
             {
-                Avisar(resultado.Mensagem);
+                Avisar("Música não encontrada.");
                 return;
             }
 
-            var musica = resultado.Valor!;
             Console.Write($"Excluir \"{musica.Nome}\"? (s/n): ");
             if (Console.ReadLine()?.Trim().Equals("s", StringComparison.OrdinalIgnoreCase) == true)
             {
-                var resultadoExclusao = await musicaService.ExcluirAsync(id);
-                Avisar(resultadoExclusao.Mensagem);
+                Avisar(musicaService.Excluir(id)
+                    ? "Música excluída com sucesso."
+                    : "Não foi possível excluir a música.");
             }
         }
 
-        private async Task TocarMusicaAsync()
+        private void TocarMusica()
         {
-            await ListarMusicasAsync(false);
+            ListarMusicas(false);
             int id = LerInteiro("\nID da música");
-            var resultado = await musicaService.ObterPorIdAsync(id);
-            if (!resultado.Sucesso)
+            var musica = musicaService.ObterPorId(id);
+            if (musica is null)
             {
-                Avisar(resultado.Mensagem);
+                Avisar("Música não encontrada.");
                 return;
             }
 
-            tocador.Tocar(resultado.Valor!);
+            tocador.Tocar(musica);
         }
 
-        private async Task<Musica> LerDadosMusicaAsync()
+        private Musica LerDadosMusica()
         {
             string nome = LerTexto("Nome");
             string cantor = LerTexto("Cantor");
             return new Musica(nome, cantor)
             {
-                GeneroId = await EscolherGeneroAsync(),
-                EmocaoId = await EscolherEmocaoAsync(),
+                GeneroId = EscolherGenero(),
+                EmocaoId = EscolherEmocao(),
                 Velocidade = LerInteiro("Velocidade BPM")
             };
         }
 
-        private async Task<int> EscolherGeneroAsync(int atual = 0)
+        private int EscolherGenero(int atual = 0)
         {
-            var resultado = await generoService.ListarAsync();
-            if (!resultado.Sucesso)
-            {
-                Console.WriteLine(resultado.Mensagem);
-                return 0;
-            }
-
-            var generos = resultado.Valor!;
+            var generos = generoService.Listar();
             foreach (var genero in generos)
                 Console.WriteLine($"{genero.Id} - {genero.Nome}");
             return EscolherId("Gênero", generos.Select(g => g.Id).ToHashSet(), atual);
         }
 
-        private async Task<int> EscolherEmocaoAsync(int atual = 0)
+        private int EscolherEmocao(int atual = 0)
         {
-            var resultado = await emocaoService.ListarAsync();
-            if (!resultado.Sucesso)
-            {
-                Console.WriteLine(resultado.Mensagem);
-                return 0;
-            }
-
-            var emocoes = resultado.Valor!;
+            var emocoes = emocaoService.Listar();
             foreach (var emocao in emocoes)
                 Console.WriteLine($"{emocao.Id} - {emocao.Sentimento}");
             return EscolherId("Emoção", emocoes.Select(e => e.Id).ToHashSet(), atual);
