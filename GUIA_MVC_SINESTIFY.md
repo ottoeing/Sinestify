@@ -149,3 +149,32 @@ O ConsoleApp ja existe e deve continuar como cliente da aplicacao, nao como cama
 - Credenciais nao estao hardcoded nem versionadas.
 - Migrations existentes continuam preservadas e uma migracao de banco foi testada sem perda de dados.
 - Existem testes de regras, endpoints e persistencia cobrindo os fluxos principais.
+
+## Autenticacao da WebAPI
+
+A API disponibiliza `POST /api/usuarios/registrar` e `POST /api/usuarios/login`.
+O cadastro normaliza o e-mail e grava a senha com hash; o login retorna um token
+JWT com validade de duas horas. Os endpoints de musicas, generos, emocoes e
+consulta do proprio usuario exigem `Authorization: Bearer <token>`.
+
+Configure as variaveis de ambiente antes de iniciar a API. Use a connection
+string real do ambiente e uma chave secreta aleatoria de pelo menos 32 bytes;
+nao grave esses valores no repositorio:
+
+```powershell
+$env:ConnectionStrings__Sinestify = "Server=localhost;Port=3306;Database=sinestify;Uid=USUARIO;Pwd=SENHA;"
+$env:Authentication__Jwt__SecretKey = "SUBSTITUA_POR_UMA_CHAVE_ALEATORIA_COM_32_BYTES_OU_MAIS"
+dotnet run --project .\Sinestify.WebAPI
+```
+
+Depois de configurar as variaveis, aplique a migration para criar a tabela
+`Usuarios`, preservando as tabelas existentes:
+
+```powershell
+# Execute uma vez se a ferramenta EF ainda nao estiver instalada.
+dotnet tool install --global dotnet-ef --version 9.0.0
+dotnet ef database update --project .\Sinestify.Data --startup-project .\Sinestify.WebAPI
+```
+
+As chamadas de cadastro e login estao documentadas em
+[`Sinestify.WebAPI/Auth.http`](./Sinestify.WebAPI/Auth.http).

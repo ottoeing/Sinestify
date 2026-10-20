@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sinestify.WebAPI.Dtos;
 using Sinestify.WebAPI.Services;
@@ -5,6 +6,7 @@ using Sinestify.WebAPI.Services;
 namespace Sinestify.WebAPI.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/musicas")]
 public sealed class MusicasController : ControllerBase
 {

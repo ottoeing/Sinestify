@@ -12,6 +12,7 @@ public class ContextoSinestify : DbContext
     public DbSet<Musica> Musicas => Set<Musica>();
     public DbSet<Genero> Generos => Set<Genero>();
     public DbSet<Emocao> Emocoes => Set<Emocao>();
+    public DbSet<Usuario> Usuarios => Set<Usuario>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -64,6 +65,23 @@ public class ContextoSinestify : DbContext
             .HasForeignKey(m => m.EmocaoId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Usuario>(entity =>
+        {
+            entity.ToTable("Usuarios");
+            entity.HasKey(u => u.Id);
+            entity.Property(u => u.Nome)
+                .IsRequired()
+                .HasMaxLength(100);
+            entity.Property(u => u.Email)
+                .IsRequired()
+                .HasMaxLength(254);
+            entity.Property(u => u.SenhaHash)
+                .IsRequired()
+                .HasMaxLength(512);
+            entity.HasIndex(u => u.Email)
+                .IsUnique();
+        });
 
         modelBuilder.Entity<Emocao>().HasData(
             new { Id = 1, Sentimento = "Alegria" }, new { Id = 2, Sentimento = "Tristeza" },
