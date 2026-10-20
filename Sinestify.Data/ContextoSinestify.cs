@@ -4,22 +4,20 @@ namespace Sinesify;
 
 public class ContextoSinestify : DbContext
 {
-    private const string StringConexao = "Server=127.0.0.1;Port=3306;Database=sinestify;Uid=root;******;SslMode=None;AllowPublicKeyRetrieval=True;ConnectionTimeout=30;";
-
-    public ContextoSinestify()
+    private static string StringConexao
     {
-    }
-
-    public ContextoSinestify(DbContextOptions<ContextoSinestify> options)
-        : base(options)
-    {
+        get
+        {
+            var senha = Environment.GetEnvironmentVariable("SINESTIFY_DB_PASSWORD") ?? string.Empty;
+            return $"Server=127.0.0.1;Port=3306;Database=sinestify;Uid=root;Password={senha};SslMode=None;AllowPublicKeyRetrieval=True;ConnectionTimeout=30;";
+        }
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseMySql(StringConexao, new MySqlServerVersion(new Version(8, 0, 0)));
+            optionsBuilder.UseMySql(StringConexao, ServerVersion.AutoDetect(StringConexao));
         }
     }
 

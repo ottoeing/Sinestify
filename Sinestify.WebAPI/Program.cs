@@ -48,10 +48,10 @@ app.MapPost("/login/auth", ([FromBody] Usuario usuario) =>
     var usuarioAutenticado = new UsuarioService().Login(usuario);
     if (usuarioAutenticado is null)
     {
-        return Results.Unauthorized();
+        return "Credenciais inválidas.";
     }
 
-    return Results.Ok(new TokenService(builder.Configuration).GerarToken(usuarioAutenticado));
+    return new TokenService(builder.Configuration).GerarToken(usuarioAutenticado);
 });
 
 var usuariosGroup = app.MapGroup("/usuarios");
@@ -61,10 +61,10 @@ usuariosGroup.MapPost("/registrar", ([FromBody] Usuario usuario) =>
     var usuarioCriado = new UsuarioService().Registrar(usuario);
     if (usuarioCriado is null)
     {
-        return Results.BadRequest(new { mensagem = "Não foi possível registrar o usuário." });
+        return "Não foi possível registrar o usuário.";
     }
 
-    return Results.Ok(usuarioCriado);
+    return $"Usuário {usuarioCriado.Nome} registrado com sucesso.";
 });
 
 usuariosGroup.MapPost("/login", ([FromBody] Usuario usuario) =>
@@ -72,10 +72,10 @@ usuariosGroup.MapPost("/login", ([FromBody] Usuario usuario) =>
     var usuarioAutenticado = new UsuarioService().Login(usuario);
     if (usuarioAutenticado is null)
     {
-        return Results.BadRequest(new { mensagem = "Credenciais inválidas." });
+        return "Credenciais inválidas.";
     }
 
-    return Results.Ok(usuarioAutenticado);
+    return $"Bem-vindo, {usuarioAutenticado.Nome}!";
 });
 
 var musicasGroup = app.MapGroup("/api/musicas").RequireAuthorization();
@@ -85,7 +85,7 @@ musicasGroup.MapGet("/", () => new MusicaService().Listar());
 musicasGroup.MapGet("/{id:int}", (int id) =>
 {
     var musica = new MusicaService().ObterPorId(id);
-    return musica is null ? Results.NotFound() : Results.Ok(musica);
+    return (object?)musica ?? "Música não encontrada.";
 });
 
 musicasGroup.MapPost("/", ([FromBody] Musica musica) =>
@@ -93,8 +93,8 @@ musicasGroup.MapPost("/", ([FromBody] Musica musica) =>
     musica.Id = 0;
     var musicaCriada = new MusicaService().Adicionar(musica);
     return musicaCriada is null
-        ? Results.BadRequest(new { mensagem = "Não foi possível cadastrar a música." })
-        : Results.Ok(musicaCriada);
+        ? "Não foi possível cadastrar a música."
+        : $"Música {musicaCriada.Nome} cadastrada com sucesso.";
 });
 
 musicasGroup.MapPut("/{id:int}", (int id, [FromBody] Musica musica) =>
@@ -102,15 +102,15 @@ musicasGroup.MapPut("/{id:int}", (int id, [FromBody] Musica musica) =>
     musica.Id = id;
     var musicaAtualizada = new MusicaService().Atualizar(musica);
     return musicaAtualizada is null
-        ? Results.BadRequest(new { mensagem = "Não foi possível atualizar a música." })
-        : Results.Ok(musicaAtualizada);
+        ? "Não foi possível atualizar a música."
+        : $"Música {musicaAtualizada.Nome} atualizada com sucesso.";
 });
 
 musicasGroup.MapDelete("/{id:int}", (int id) =>
 {
     return new MusicaService().Excluir(id)
-        ? Results.Ok("Música removida com sucesso.")
-        : Results.NotFound();
+        ? "Música removida com sucesso."
+        : "Música não encontrada.";
 });
 
 app.MapGet("/api/generos", () => new GeneroService().Listar())
