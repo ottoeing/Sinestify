@@ -4,12 +4,6 @@ namespace Sinesify;
 
 public class ContextoSinestify : DbContext
 {
-    private const string StringConexaoPadrao = "Server=127.0.0.1;Port=3306;Database=sinestify;Uid=root;Pwd=1234;SslMode=None;AllowPublicKeyRetrieval=True;ConnectionTimeout=30;";
-
-    public ContextoSinestify()
-    {
-    }
-
     public ContextoSinestify(DbContextOptions<ContextoSinestify> options)
         : base(options)
     {
@@ -18,17 +12,6 @@ public class ContextoSinestify : DbContext
     public DbSet<Musica> Musicas => Set<Musica>();
     public DbSet<Genero> Generos => Set<Genero>();
     public DbSet<Emocao> Emocoes => Set<Emocao>();
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            var stringConexao = Environment.GetEnvironmentVariable("ConnectionStrings__Sinestify")
-                ?? StringConexaoPadrao;
-
-            optionsBuilder.UseMySql(stringConexao, new MySqlServerVersion(new Version(8, 0, 0)));
-        }
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -118,5 +101,20 @@ public class ContextoSinestify : DbContext
             new { Id = 18, Nome = "Can't Stop", Cantor = "Red Hot Chili Peppers", GeneroId = 12, EmocaoId = 9, Velocidade = 91 },
             new { Id = 19, Nome = "Wake Me Up", Cantor = "Avicii", GeneroId = 7, EmocaoId = 7, Velocidade = 124 },
             new { Id = 20, Nome = "Sweet Child O' Mine", Cantor = "Guns N' Roses", GeneroId = 4, EmocaoId = 6, Velocidade = 125 });
+    }
+}
+
+public static class SinestifyMySqlOptionsExtensions
+{
+    public static DbContextOptionsBuilder UseSinestifyMySql(
+        this DbContextOptionsBuilder optionsBuilder,
+        string connectionString)
+    {
+        ArgumentNullException.ThrowIfNull(optionsBuilder);
+        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+
+        return optionsBuilder.UseMySql(
+            connectionString,
+            new MySqlServerVersion(new Version(8, 0, 0)));
     }
 }
