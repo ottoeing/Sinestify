@@ -24,5 +24,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sinestify.Service\Sinestify.Service.csproj" />
+  </ItemGroup>
 
 </Project>

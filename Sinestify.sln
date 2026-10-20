@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sinestify.Service", "Sinest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sinestify.ConsoleApp", "Sinestify.ConsoleApp\Sinestify.ConsoleApp.csproj", "{EA36990A-D4D8-4534-BAB2-D7EDE0F0061B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sinestify.Model", "Sinestify.Model\Sinestify.Model.csproj", "{CDBB8440-83DA-4B4D-9A5D-145768240858}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sinestify.WebAPI", "Sinestify.WebAPI\Sinestify.WebAPI.csproj", "{DA22C211-4219-4B57-8344-504275E5FA0C}"
 EndProject
 Global
@@ -71,6 +73,18 @@ Global
 		{EA36990A-D4D8-4534-BAB2-D7EDE0F0061B}.Release|x64.Build.0 = Release|Any CPU
 		{EA36990A-D4D8-4534-BAB2-D7EDE0F0061B}.Release|x86.ActiveCfg = Release|Any CPU
 		{EA36990A-D4D8-4534-BAB2-D7EDE0F0061B}.Release|x86.Build.0 = Release|Any CPU
+		{CDBB8440-83DA-4B4D-9A5D-145768240858}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDBB8440-83DA-4B4D-9A5D-145768240858}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDBB8440-83DA-4B4D-9A5D-145768240858}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CDBB8440-83DA-4B4D-9A5D-145768240858}.Debug|x64.Build.0 = Debug|Any CPU
+		{CDBB8440-83DA-4B4D-9A5D-145768240858}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CDBB8440-83DA-4B4D-9A5D-145768240858}.Debug|x86.Build.0 = Debug|Any CPU
+		{CDBB8440-83DA-4B4D-9A5D-145768240858}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDBB8440-83DA-4B4D-9A5D-145768240858}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDBB8440-83DA-4B4D-9A5D-145768240858}.Release|x64.ActiveCfg = Release|Any CPU
+		{CDBB8440-83DA-4B4D-9A5D-145768240858}.Release|x64.Build.0 = Release|Any CPU
+		{CDBB8440-83DA-4B4D-9A5D-145768240858}.Release|x86.ActiveCfg = Release|Any CPU
+		{CDBB8440-83DA-4B4D-9A5D-145768240858}.Release|x86.Build.0 = Release|Any CPU
 		{DA22C211-4219-4B57-8344-504275E5FA0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DA22C211-4219-4B57-8344-504275E5FA0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA22C211-4219-4B57-8344-504275E5FA0C}.Debug|x64.ActiveCfg = Debug|Any CPU
