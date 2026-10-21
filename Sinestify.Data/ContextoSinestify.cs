@@ -1,4 +1,5 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Sinesify;
 
@@ -9,7 +10,23 @@ public class ContextoSinestify : DbContext
         get
         {
             var senha = Environment.GetEnvironmentVariable("SINESTIFY_DB_PASSWORD") ?? string.Empty;
-            return $"Server=127.0.0.1;Port=3306;Database=sinestify;Uid=root;Password={senha};SslMode=None;AllowPublicKeyRetrieval=True;ConnectionTimeout=30;";
+            if (string.IsNullOrWhiteSpace(senha))
+            {
+                throw new InvalidOperationException("Configure a variável de ambiente SINESTIFY_DB_PASSWORD.");
+            }
+
+            var configuracao = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.json", optional: false)
+                .Build();
+            var stringConexao = configuracao.GetConnectionString("Sinestify")
+                ?? throw new InvalidOperationException("A conexão Sinestify não está configurada em appsettings.json.");
+
+            var construtor = new MySqlConnector.MySqlConnectionStringBuilder(stringConexao)
+            {
+                Password = senha
+            };
+            return construtor.ConnectionString;
         }
     }
 
