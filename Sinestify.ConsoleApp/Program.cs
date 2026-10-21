@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Sinesify.Service;
 
 namespace Sinesify
@@ -6,6 +7,9 @@ namespace Sinesify
     {
         static void Main()
         {
+            using var contexto = new ContextoSinestify();
+            contexto.Database.Migrate();
+
             var menu = new Menu(
                 new MusicaService(),
                 new GeneroService(),

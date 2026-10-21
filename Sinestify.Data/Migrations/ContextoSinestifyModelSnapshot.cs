@@ -392,6 +392,186 @@ namespace Sinestify.Migrations
                             GeneroId = 4,
                             Nome = "Sweet Child O' Mine",
                             Velocidade = 125
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Cantor = "Pharrell Williams",
+                            EmocaoId = 1,
+                            GeneroId = 1,
+                            Nome = "Happy",
+                            Velocidade = 160
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Cantor = "Coldplay",
+                            EmocaoId = 7,
+                            GeneroId = 2,
+                            Nome = "Fix You",
+                            Velocidade = 69
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Cantor = "Lewis Capaldi",
+                            EmocaoId = 2,
+                            GeneroId = 1,
+                            Nome = "Someone You Loved",
+                            Velocidade = 110
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Cantor = "Dua Lipa",
+                            EmocaoId = 9,
+                            GeneroId = 1,
+                            Nome = "Levitating",
+                            Velocidade = 103
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Cantor = "David Guetta feat. Sia",
+                            EmocaoId = 7,
+                            GeneroId = 3,
+                            Nome = "Titanium",
+                            Velocidade = 126
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Cantor = "Coldplay",
+                            EmocaoId = 6,
+                            GeneroId = 11,
+                            Nome = "Clocks",
+                            Velocidade = 131
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Cantor = "John Legend",
+                            EmocaoId = 10,
+                            GeneroId = 4,
+                            Nome = "All of Me",
+                            Velocidade = 63
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Cantor = "Eminem",
+                            EmocaoId = 9,
+                            GeneroId = 6,
+                            Nome = "Lose Yourself",
+                            Velocidade = 171
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Cantor = "Louis Armstrong",
+                            EmocaoId = 5,
+                            GeneroId = 7,
+                            Nome = "What a Wonderful World",
+                            Velocidade = 107
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Cantor = "Bob Marley",
+                            EmocaoId = 5,
+                            GeneroId = 8,
+                            Nome = "No Woman, No Cry",
+                            Velocidade = 78
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Cantor = "Chitãozinho & Xororó",
+                            EmocaoId = 4,
+                            GeneroId = 10,
+                            Nome = "Evidências",
+                            Velocidade = 76
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Cantor = "Charlie Brown Jr.",
+                            EmocaoId = 7,
+                            GeneroId = 2,
+                            Nome = "Dias de Luta, Dias de Glória",
+                            Velocidade = 98
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Cantor = "Tom Jobim",
+                            EmocaoId = 10,
+                            GeneroId = 7,
+                            Nome = "Garota de Ipanema",
+                            Velocidade = 120
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Cantor = "Claude Debussy",
+                            EmocaoId = 5,
+                            GeneroId = 5,
+                            Nome = "Clair de Lune",
+                            Velocidade = 69
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Cantor = "Linkin Park",
+                            EmocaoId = 8,
+                            GeneroId = 12,
+                            Nome = "In the End",
+                            Velocidade = 105
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Cantor = "a-ha",
+                            EmocaoId = 3,
+                            GeneroId = 1,
+                            Nome = "Take On Me",
+                            Velocidade = 169
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Cantor = "Gotye feat. Kimbra",
+                            EmocaoId = 2,
+                            GeneroId = 11,
+                            Nome = "Somebody That I Used to Know",
+                            Velocidade = 129
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Cantor = "Bruno Mars",
+                            EmocaoId = 10,
+                            GeneroId = 4,
+                            Nome = "Just the Way You Are",
+                            Velocidade = 109
+                        },
+                        new
+                        {
+                            Id = 39,
+                            Cantor = "Survivor",
+                            EmocaoId = 9,
+                            GeneroId = 2,
+                            Nome = "Eye of the Tiger",
+                            Velocidade = 109
+                        },
+                        new
+                        {
+                            Id = 40,
+                            Cantor = "Bobby McFerrin",
+                            EmocaoId = 1,
+                            GeneroId = 7,
+                            Nome = "Don't Worry Be Happy",
+                            Velocidade = 114
                         });
                 });
 

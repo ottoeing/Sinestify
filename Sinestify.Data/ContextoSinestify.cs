@@ -5,6 +5,10 @@ namespace Sinesify;
 
 public class ContextoSinestify : DbContext
 {
+    public ContextoSinestify() { }
+
+    public ContextoSinestify(DbContextOptions<ContextoSinestify> options) : base(options) { }
+
     private static string StringConexao
     {
         get
@@ -30,11 +34,14 @@ public class ContextoSinestify : DbContext
         }
     }
 
+    internal static string CriarStringConexao() => StringConexao;
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseMySql(StringConexao, ServerVersion.AutoDetect(StringConexao));
+            var stringConexao = CriarStringConexao();
+            optionsBuilder.UseMySql(stringConexao, ServerVersion.AutoDetect(stringConexao));
         }
     }
 
@@ -147,6 +154,26 @@ public class ContextoSinestify : DbContext
             new { Id = 17, Nome = "Summer Of '69", Cantor = "Bryan Adams", GeneroId = 4, EmocaoId = 6, Velocidade = 138 },
             new { Id = 18, Nome = "Can't Stop", Cantor = "Red Hot Chili Peppers", GeneroId = 12, EmocaoId = 9, Velocidade = 91 },
             new { Id = 19, Nome = "Wake Me Up", Cantor = "Avicii", GeneroId = 7, EmocaoId = 7, Velocidade = 124 },
-            new { Id = 20, Nome = "Sweet Child O' Mine", Cantor = "Guns N' Roses", GeneroId = 4, EmocaoId = 6, Velocidade = 125 });
+            new { Id = 20, Nome = "Sweet Child O' Mine", Cantor = "Guns N' Roses", GeneroId = 4, EmocaoId = 6, Velocidade = 125 },
+            new { Id = 21, Nome = "Happy", Cantor = "Pharrell Williams", GeneroId = 1, EmocaoId = 1, Velocidade = 160 },
+            new { Id = 22, Nome = "Fix You", Cantor = "Coldplay", GeneroId = 2, EmocaoId = 7, Velocidade = 69 },
+            new { Id = 23, Nome = "Someone You Loved", Cantor = "Lewis Capaldi", GeneroId = 1, EmocaoId = 2, Velocidade = 110 },
+            new { Id = 24, Nome = "Levitating", Cantor = "Dua Lipa", GeneroId = 1, EmocaoId = 9, Velocidade = 103 },
+            new { Id = 25, Nome = "Titanium", Cantor = "David Guetta feat. Sia", GeneroId = 3, EmocaoId = 7, Velocidade = 126 },
+            new { Id = 26, Nome = "Clocks", Cantor = "Coldplay", GeneroId = 11, EmocaoId = 6, Velocidade = 131 },
+            new { Id = 27, Nome = "All of Me", Cantor = "John Legend", GeneroId = 4, EmocaoId = 10, Velocidade = 63 },
+            new { Id = 28, Nome = "Lose Yourself", Cantor = "Eminem", GeneroId = 6, EmocaoId = 9, Velocidade = 171 },
+            new { Id = 29, Nome = "What a Wonderful World", Cantor = "Louis Armstrong", GeneroId = 7, EmocaoId = 5, Velocidade = 107 },
+            new { Id = 30, Nome = "No Woman, No Cry", Cantor = "Bob Marley", GeneroId = 8, EmocaoId = 5, Velocidade = 78 },
+            new { Id = 31, Nome = "Evidências", Cantor = "Chitãozinho & Xororó", GeneroId = 10, EmocaoId = 4, Velocidade = 76 },
+            new { Id = 32, Nome = "Dias de Luta, Dias de Glória", Cantor = "Charlie Brown Jr.", GeneroId = 2, EmocaoId = 7, Velocidade = 98 },
+            new { Id = 33, Nome = "Garota de Ipanema", Cantor = "Tom Jobim", GeneroId = 7, EmocaoId = 10, Velocidade = 120 },
+            new { Id = 34, Nome = "Clair de Lune", Cantor = "Claude Debussy", GeneroId = 5, EmocaoId = 5, Velocidade = 69 },
+            new { Id = 35, Nome = "In the End", Cantor = "Linkin Park", GeneroId = 12, EmocaoId = 8, Velocidade = 105 },
+            new { Id = 36, Nome = "Take On Me", Cantor = "a-ha", GeneroId = 1, EmocaoId = 3, Velocidade = 169 },
+            new { Id = 37, Nome = "Somebody That I Used to Know", Cantor = "Gotye feat. Kimbra", GeneroId = 11, EmocaoId = 2, Velocidade = 129 },
+            new { Id = 38, Nome = "Just the Way You Are", Cantor = "Bruno Mars", GeneroId = 4, EmocaoId = 10, Velocidade = 109 },
+            new { Id = 39, Nome = "Eye of the Tiger", Cantor = "Survivor", GeneroId = 2, EmocaoId = 9, Velocidade = 109 },
+            new { Id = 40, Nome = "Don't Worry Be Happy", Cantor = "Bobby McFerrin", GeneroId = 7, EmocaoId = 1, Velocidade = 114 });
     }
 }

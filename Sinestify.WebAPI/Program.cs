@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Sinesify;
@@ -38,6 +39,11 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+using (var contexto = new ContextoSinestify())
+{
+    contexto.Database.Migrate();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -69,8 +69,11 @@ Os arquivos ficam em [Sinestify.Data/Migrations](./Sinestify.Data/Migrations/):
 - `CriacaoInicial`: cria tabelas e insere os dados iniciais.
 - `RestringirRelacionamentosEDefinirConstraints`: adiciona limites, índices únicos e regras de relacionamento.
 - `AddUsuarios`: cria a tabela de usuários.
+- `AdicionarMaisMusicas`: cadastra mais 20 músicas com gênero, emoção e velocidade.
 
-Aplicar as migrações ao banco:
+O ConsoleApp e a WebAPI aplicam automaticamente as migrações pendentes ao iniciar. Assim, em um banco novo, as tabelas e as 40 músicas iniciais são criadas antes do uso da aplicação. A senha do MySQL deve estar configurada na variável de ambiente `SINESTIFY_DB_PASSWORD`.
+
+Também é possível aplicar as migrações manualmente:
 
 ```powershell
 dotnet ef database update --project .\Sinestify.Data\Sinestify.Data.csproj --startup-project .\Sinestify.ConsoleApp\Sinestify.ConsoleApp.csproj
