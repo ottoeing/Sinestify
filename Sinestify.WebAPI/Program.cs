@@ -1,22 +1,20 @@
 using System.Text.Json.Serialization;
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.IdentityModel.Tokens;
 using Sinesify;
 using Sinesify.Service;
 
 var builder = WebApplication.CreateBuilder(args);
+var tokenService = new TokenService(builder.Configuration);
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
-
-var jwtSettings = builder.Configuration.GetSection("JWTSettings");
-var secretKey = jwtSettings["SecretKey"] ?? TokenService.ChaveSecreta;
-var secretKeyBytes = Encoding.ASCII.GetBytes(secretKey);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -32,7 +30,7 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
+        IssuerSigningKey = tokenService.ChaveAssinatura,
         ClockSkew = TimeSpan.Zero
     };
 });
@@ -53,10 +51,10 @@ app.MapPost("/login/auth", ([FromBody] Usuario usuario) =>
     var usuarioAutenticado = new UsuarioService().Login(usuario);
     if (usuarioAutenticado is null)
     {
-        return "Credenciais inválidas.";
+        return Results.Unauthorized();
     }
 
-    return new TokenService(builder.Configuration).GerarToken(usuarioAutenticado);
+    return Results.Text(tokenService.GerarToken(usuarioAutenticado));
 });
 
 var usuariosGroup = app.MapGroup("/usuarios");
@@ -123,5 +121,20 @@ app.MapGet("/api/generos", () => new GeneroService().Listar())
 
 app.MapGet("/api/emocoes", () => new EmocaoService().Listar())
 .RequireAuthorization();
+
+Console.WriteLine("Endpoints disponíveis:");
+foreach (var endpoint in app.Services.GetRequiredService<EndpointDataSource>().Endpoints
+    .OfType<RouteEndpoint>()
+    .OrderBy(endpoint => endpoint.RoutePattern.RawText)
+    .ThenBy(endpoint => endpoint.Metadata.GetMetadata<HttpMethodMetadata>()?.HttpMethods.FirstOrDefault()))
+{
+    var methods = endpoint.Metadata.GetMetadata<HttpMethodMetadata>()?.HttpMethods;
+    var methodList = methods is { Count: > 0 } ? string.Join(", ", methods) : "ANY";
+    var access = endpoint.Metadata.GetOrderedMetadata<IAuthorizeData>().Count > 0
+        ? "Autenticação obrigatória"
+        : "Público";
+
+    Console.WriteLine($"  {methodList,-7} {endpoint.RoutePattern} - {access}");
+}
 
 app.Run();

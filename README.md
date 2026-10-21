@@ -103,7 +103,7 @@ dotnet run --project .\Sinestify.ConsoleApp\Sinestify.ConsoleApp.csproj
 
 ## WebAPI
 
-As rotas estão em [Sinestify.WebAPI/Program.cs](./Sinestify.WebAPI/Program.cs). `UseAuthentication()` lê a autenticação da requisição; `UseAuthorization()` aplica a exigência às rotas marcadas com `RequireAuthorization()`.
+As rotas estão em [Sinestify.WebAPI/Program.cs](./Sinestify.WebAPI/Program.cs). Ao iniciar, a aplicação lista no terminal os métodos HTTP, os caminhos e se cada endpoint exige autenticação. `UseAuthentication()` lê a autenticação da requisição; `UseAuthorization()` aplica a exigência às rotas marcadas com `RequireAuthorization()`.
 
 ### Exemplo de criação de música
 
@@ -165,16 +165,68 @@ $env:SINESTIFY_DB_PASSWORD = "senha-do-mysql"
 
 ### JWT
 
-O código define `TokenService.ChaveSecreta` como chave padrão com o valor literal `Sinestify`. A WebAPI usa essa chave para validar tokens e o `TokenService` para gerá-los quando `JWTSettings:SecretKey` não está configurada. `TokenService` também lê `JWTSettings:ExpirationInHours` ao gerar o token.
+Configure uma chave privada de pelo menos 32 bytes UTF-8 em `JWTSettings:SecretKey`. A API não inicia sem essa chave; gere uma nova para cada ambiente e não a compartilhe nem a versione. Se `JWTSettings:ExpirationInHours` não for definida, o token expira em duas horas. Alterar a chave invalida os tokens emitidos anteriormente.
 
 ```powershell
+$rng = [Security.Cryptography.RandomNumberGenerator]::Create()
+$keyBytes = New-Object byte[] 32
+$rng.GetBytes($keyBytes)
+$env:JWTSettings__SecretKey = [Convert]::ToBase64String($keyBytes)
+$rng.Dispose()
 $env:JWTSettings__ExpirationInHours = "2"
 ```
-
-Esse valor é curto e conhecido, portanto qualquer pessoa que conheça a chave pode gerar tokens aceitos pela API. Use-o apenas para estudos e testes locais, não numa API publicada. Para substituir a chave via ambiente, defina `JWTSettings__SecretKey` com uma chave aleatória privada.
 
 Inicie a API no mesmo terminal para que receba as variáveis:
 
 ```powershell
 dotnet run --project .\Sinestify.WebAPI\Sinestify.WebAPI.csproj
 ```
+
+### Testes de autenticação com cURL no Postman
+
+No Postman, use **Import > Raw text**, cole um comando cURL por vez e importe. Troque `http://localhost:5000` pela URL exibida ao iniciar a API, se for diferente. Para o login válido, use um usuário já cadastrado.
+
+**1. Login válido — deve retornar um JWT no corpo da resposta:**
+
+```bash
+curl --request POST \
+  --url http://localhost:5000/login/auth \
+  --header "Content-Type: application/json" \
+  --data '{"email":"usuario@exemplo.com","senha":"Senha123!"}'
+```
+
+Copie o token retornado para usá-lo no teste 5.
+
+**2. Login inválido — deve retornar HTTP 401:**
+
+```bash
+curl --request POST \
+  --url http://localhost:5000/login/auth \
+  --header "Content-Type: application/json" \
+  --data '{"email":"usuario@exemplo.com","senha":"senha-incorreta"}'
+```
+
+**3. Acesso sem token — deve retornar HTTP 401:**
+
+```bash
+curl --request GET \
+  --url http://localhost:5000/api/emocoes
+```
+
+**4. Acesso com token inválido — deve retornar HTTP 401:**
+
+```bash
+curl --request GET \
+  --url http://localhost:5000/api/emocoes \
+  --header "Authorization: Bearer token-invalido"
+```
+
+**5. Acesso com o JWT do teste 1 — a autenticação deve ser aceita; com o banco configurado, deve retornar HTTP 200:**
+
+```bash
+curl --request GET \
+  --url http://localhost:5000/api/emocoes \
+  --header "Authorization: Bearer COLE_AQUI_O_JWT"
+```
+
+Os testes 3 e 4 validam a rejeição antes de acessar o banco. O teste 5 também depende de a conexão com o banco estar configurada e disponível.
