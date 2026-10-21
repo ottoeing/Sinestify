@@ -14,8 +14,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 var jwtSettings = builder.Configuration.GetSection("JWTSettings");
-var secretKey = jwtSettings["SecretKey"]
-    ?? throw new InvalidOperationException("A configuração JWTSettings:SecretKey é obrigatória.");
+var secretKey = jwtSettings["SecretKey"] ?? TokenService.ChaveSecreta;
 var secretKeyBytes = Encoding.ASCII.GetBytes(secretKey);
 
 builder.Services.AddAuthentication(options =>

@@ -9,11 +9,12 @@ namespace Sinesify.Service;
 
 public sealed class TokenService(IConfiguration configuration)
 {
+    public const string ChaveSecreta = "Sinestify";
+
     public string GerarToken(Usuario usuario)
     {
         var jwtSettings = configuration.GetSection("JWTSettings");
-        var secretKey = jwtSettings["SecretKey"]
-            ?? throw new InvalidOperationException("A configuração JWTSettings:SecretKey é obrigatória.");
+        var secretKey = jwtSettings["SecretKey"] ?? ChaveSecreta;
         var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
         var credentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
         var claims = new List<Claim>
