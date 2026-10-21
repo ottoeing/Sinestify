@@ -31,6 +31,16 @@ public sealed class UsuarioService
         return repositorio.Adicionar(usuario);
     }
 
+    public IReadOnlyList<string> ValidarCadastro(Usuario usuario)
+    {
+        return business.ValidarCadastro(new Usuario
+        {
+            Nome = usuario.Nome?.Trim() ?? string.Empty,
+            Email = NormalizarEmail(usuario.Email),
+            Senha = usuario.Senha ?? string.Empty
+        });
+    }
+
     public Usuario? Login(Usuario credenciais)
     {
         credenciais.Email = NormalizarEmail(credenciais.Email);

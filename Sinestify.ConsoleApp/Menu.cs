@@ -76,16 +76,25 @@ namespace Sinesify
                 Console.Write("Senha: ");
                 var senha = Console.ReadLine() ?? string.Empty;
 
-                var usuarioCriado = usuarioService.Registrar(new Usuario
+                var dadosUsuario = new Usuario
                 {
                     Nome = nome,
                     Email = email,
                     Senha = senha
-                });
+                };
+
+                var erros = usuarioService.ValidarCadastro(dadosUsuario);
+                if (erros.Count > 0)
+                {
+                    Avisar($"Não foi possível registrar o usuário:\n- {string.Join("\n- ", erros)}");
+                    continue;
+                }
+
+                var usuarioCriado = usuarioService.Registrar(dadosUsuario);
 
                 if (usuarioCriado is null)
                 {
-                    Avisar("Usuário já existe ou os dados são inválidos.");
+                    Avisar("Já existe um usuário cadastrado com esse e-mail.");
                     continue;
                 }
 
