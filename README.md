@@ -178,3 +178,7 @@ Inicie a API no mesmo terminal para que receba as variáveis:
 ```powershell
 dotnet run --project .\Sinestify.WebAPI\Sinestify.WebAPI.csproj
 ```
+
+Se `dotnet watch` informar que `http://127.0.0.1:5000` ja esta em uso, encerre a outra instancia com `Ctrl+C`.
+Para usar outra porta (por exemplo, `5001`), execute `dotnet watch --project .\Sinestify.WebAPI\Sinestify.WebAPI.csproj --urls http://localhost:5001`.
+Se o frontend estiver em uso, configure `SINESTIFY_API_URL` no terminal dele com a mesma URL da API.
